@@ -12,7 +12,7 @@
 
 <meta name="author" content="Jacob Kaplan" />
 
-<meta name="date" content="2017-09-07" />
+<meta name="date" content="2017-10-11" />
 
 <title>Introduction to asciiReader</title>
 
@@ -70,18 +70,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Introduction to asciiReader</h1>
 <h4 class="author"><em>Jacob Kaplan</em></h4>
-<h4 class="date"><em>2017-09-07</em></h4>
+<h4 class="date"><em>2017-10-11</em></h4>
 
 
 
 <p>Some datasets are only available in fixed-width delimited (this means the each row has the same number of characters) text files (.txt) that have an SPSS setup file (.sps) that tells the SPSS software how to read in the data. This package allows R to read in this type of data by mimicking SPSS’ process. To use it you need a text file containing data and the corresponding SPSS setup file. SPSS setup files come with the file extention .sps but changing it to .txt will work the same.</p>
 <p>To use the spss_ascii_reader function, all that is needed is to provide a string with the name of the dataset (the .txt) file and a string with the name of the SPSS setup file (the .sps) including the file extention. The files must be in the working directory. Below is an example of reading in the example dataset - the original can be found <a href="https://www.icpsr.umich.edu/icpsrweb/NACJD/studies/9327?q=&amp;restrictionType%5B0%5D=Public+Use&amp;classification%5B0%5D=NACJD.IX.*&amp;dataFormat%5B0%5D=SPSS">here</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data_name &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_data.txt&quot;</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dataset_name &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_data.txt&quot;</span>,
              <span class="dt">package =</span> <span class="st">&quot;asciiSetupReader&quot;</span>)
 sps_name &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;example_setup.sps&quot;</span>,
              <span class="dt">package =</span> <span class="st">&quot;asciiSetupReader&quot;</span>)
 
-example &lt;-<span class="st"> </span>asciiSetupReader<span class="op">::</span><span class="kw">spss_ascii_reader</span>(<span class="dt">dataset_name =</span> data_name,
+example &lt;-<span class="st"> </span>asciiSetupReader<span class="op">::</span><span class="kw">spss_ascii_reader</span>(<span class="dt">dataset_name =</span> dataset_name,
 <span class="dt">sps_name =</span> sps_name)
 example[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>] <span class="co"># Look at first 6 rows and first 4 columns</span></code></pre></div>
 <pre><code>##    IDENTIFIER_CODE NUMERIC_STATE_CODE ORI_CODE             GROUP
@@ -95,7 +95,7 @@ example[<span class="dv">1</span><span class="op">:</span><span class="dv">6</sp
 <div id="value_label_fix" class="section level2">
 <h2>value_label_fix</h2>
 <p>Fixed-width delimited text files are designed to be as compressed as possible. One way of doing this is having letters or numbers represent values. For example, instead of writing “male” or “female” in a column about gender, it will be “A” or “B” (or more commonly 0 or 1). The SPSS setup file gives the actual value of these repesentations. The parameter “value_label_fix” will give the real values if TRUE, otherwise it will keep the representation. This parameter is the most time consuming part of the function so if you have a very large dataset but only a few variables you are interested in, it may be wise to set it as FALSE.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">example &lt;-<span class="st"> </span>asciiSetupReader<span class="op">::</span><span class="kw">spss_ascii_reader</span>(<span class="dt">dataset_name =</span> data_name,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">example &lt;-<span class="st"> </span>asciiSetupReader<span class="op">::</span><span class="kw">spss_ascii_reader</span>(<span class="dt">dataset_name =</span> dataset_name,
 <span class="dt">sps_name =</span> sps_name,
 <span class="dt">value_label_fix =</span> <span class="ot">FALSE</span>)
 example[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>] <span class="co"># Look at first 6 rows and first 4 columns</span></code></pre></div>
@@ -110,7 +110,7 @@ example[<span class="dv">1</span><span class="op">:</span><span class="dv">6</sp
 <div id="real_names" class="section level2">
 <h2>real_names</h2>
 <p>Column names are similar to how there are both value representations and value labels for values in a column. The columns may have an undescriptive name (e.g. V1, V2) or a descriptive one (e.g. CITY, GENDER). When real_names is FALSE (which is the default), the undescriptive is given. When real_names is TRUE, the descriptive name is given.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">example &lt;-<span class="st"> </span>asciiSetupReader<span class="op">::</span><span class="kw">spss_ascii_reader</span>(<span class="dt">dataset_name =</span> data_name,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">example &lt;-<span class="st"> </span>asciiSetupReader<span class="op">::</span><span class="kw">spss_ascii_reader</span>(<span class="dt">dataset_name =</span> dataset_name,
 <span class="dt">sps_name =</span> sps_name,
 <span class="dt">real_names =</span> <span class="ot">FALSE</span>)
 example[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>] <span class="co"># Look at first 6 rows and first 4 columns</span></code></pre></div>
@@ -126,7 +126,7 @@ example[<span class="dv">1</span><span class="op">:</span><span class="dv">6</sp
 <h2>keep_columns</h2>
 <p>When reading a file of this type into SPSS, you can specify which columns (if you don’t want every column) to include. This has the same ability by allowing you to specify the columns you want. This parameter can accept the column number, the undescriptive column name (see above) or the descriptive column name. You cannot mix and match. To get the column names, please consult with the data’s documentation.</p>
 <p>This gets only the first two columns of data and specifies the columns by number.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">example &lt;-<span class="st"> </span>asciiSetupReader<span class="op">::</span><span class="kw">spss_ascii_reader</span>(<span class="dt">dataset_name =</span> data_name,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">example &lt;-<span class="st"> </span>asciiSetupReader<span class="op">::</span><span class="kw">spss_ascii_reader</span>(<span class="dt">dataset_name =</span> dataset_name,
 <span class="dt">sps_name =</span> sps_name, 
 <span class="dt">keep_columns =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>) <span class="co"># Gets only the first 2 columns</span>
 example[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="co"># Look at first 6 rows and first 4 columns</span></code></pre></div>
@@ -138,7 +138,7 @@ example[<span class="dv">1</span><span class="op">:</span><span class="dv">6</sp
 ## 5: SHR master file            Arizona
 ## 6: SHR master file            Arizona</code></pre>
 <p>This gets only the first two columns of data and specifies the columns by descriptive name.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">example &lt;-<span class="st"> </span>asciiSetupReader<span class="op">::</span><span class="kw">spss_ascii_reader</span>(<span class="dt">dataset_name =</span> data_name,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">example &lt;-<span class="st"> </span>asciiSetupReader<span class="op">::</span><span class="kw">spss_ascii_reader</span>(<span class="dt">dataset_name =</span> dataset_name,
 <span class="dt">sps_name =</span> sps_name, 
 <span class="dt">keep_columns =</span> <span class="kw">c</span>(<span class="st">&quot;IDENTIFIER_CODE&quot;</span>, <span class="st">&quot;NUMERIC_STATE_CODE&quot;</span>)) <span class="co"># Gets only the first 2 columns</span>
 example[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="co"># Look at first 6 rows and first 4 columns</span></code></pre></div>
