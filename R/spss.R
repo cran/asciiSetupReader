@@ -3,7 +3,7 @@
 #' @param dataset_name
 #' Name of the ASCII file with the data
 #' @param sps_name
-#' Name of the SPSS Setup file - should be a .sps or .txt file.
+#' Name of the SPSS Setup file - should be a .sps or .txt (zipped text files also work) file.
 #' @param value_label_fix
 #' If TRUE, fixes value labels of the data. e.g. If a column is "sex" and has
 #' values of 0 or 1, and the setup file says 0 = male and 1 = female, it will
@@ -20,8 +20,8 @@
 #' @export
 #'
 #' @examples
-#'
-#' dataset_name <- system.file("extdata", "example_data.txt",
+#' # Text file is zipped to save space.
+#' dataset_name <- system.file("extdata", "example_data.zip",
 #'  package = "asciiSetupReader")
 #' sps_name <- system.file("extdata", "example_setup.sps",
 #' package = "asciiSetupReader")
@@ -40,7 +40,7 @@
 #' sps_name = sps_name, real_names = FALSE)
 #'
 #' # Only returns the first 5 columns
-#' example <- spss_ascii_reader(dataset_name = dataset_name,
+#' example4 <- spss_ascii_reader(dataset_name = dataset_name,
 #' sps_name = sps_name, keep_columns = 1:5)
 spss_ascii_reader <- function(dataset_name,
                               sps_name,
@@ -51,8 +51,8 @@ spss_ascii_reader <- function(dataset_name,
   codebook <- readr::read_lines(sps_name)
   codebook <- trimws(codebook)
   codebook <- codebook[grep("^DATA LIST",
-                            codebook)[length(grep("^DATA LIST",
-                                                  codebook))]:length(codebook)]
+                            codebook, ignore.case = TRUE)[length(grep("^DATA LIST",
+                                                  codebook, ignore.case = TRUE))]:length(codebook)]
   codebook <- data.frame(codebook, stringsAsFactors = FALSE)
 
   # Get the column names
@@ -60,9 +60,11 @@ spss_ascii_reader <- function(dataset_name,
                                       ignore.case = TRUE, codebook[,1]):
                                    grep("^value labels$",
                                         ignore.case = TRUE, codebook[,1]),]
+  codebook_variables <- gsub("\\'\\'", "\\'", codebook_variables)
+  codebook_variables <- gsub("( \\'[[:alnum:]])\\'([[:alnum:]])", "\\1\\2", codebook_variables)
   temp <- any(stringr::str_count(codebook_variables, '\\"') > 2 |
                 stringr::str_count(codebook_variables, "\\'") > 2)
-  if (!is.na(temp) && temp == TRUE) {
+    if (!is.na(temp) && temp == TRUE) {
     codebook_variables <- data.frame(column_number =
                                        unlist(strsplit(codebook_variables,
                                                        "\\s{2,}")), stringsAsFactors = FALSE)
@@ -79,15 +81,12 @@ spss_ascii_reader <- function(dataset_name,
                                          codebook_variables$column_number)
   codebook_variables$column_number <- gsub("(.*) \".*", "\\1",
                                            codebook_variables$column_number)
-  codebook_variables$column_name <- gsub(" ", "_",
+  codebook_variables$column_name <- gsub(" |:|-", "_",
+                                         codebook_variables$column_name)
+  codebook_variables$column_name <- gsub("_+", "_",
                                          codebook_variables$column_name)
   codebook_variables$column_name <- gsub("_/$", "",
                                          codebook_variables$column_name)
-  codebook_variables <- codebook_variables[codebook_variables$column_number !=
-                                             codebook_variables$column_name,]
-
-
-
 
   codebook_column_spaces <- data.frame(codebook[,1][grep("DATA LIST",
                                                          ignore.case = TRUE, codebook[,1]):
@@ -113,14 +112,17 @@ spss_ascii_reader <- function(dataset_name,
   codebook_column_spaces$column_number <- gsub(" .*", "", codebook_column_spaces$column_number)
   codebook_column_spaces <- codebook_column_spaces[codebook_column_spaces$column_number %in%
                                                      codebook_variables$column_number,]
-  codebook_column_spaces$first_num <- as.numeric(codebook_column_spaces$first_num)
-  codebook_column_spaces$second_num <- as.numeric(codebook_column_spaces$second_num)
+  codebook_column_spaces$first_num <- suppressWarnings(as.numeric(codebook_column_spaces$first_num))
+  codebook_column_spaces$second_num <- suppressWarnings(as.numeric(codebook_column_spaces$second_num))
+  codebook_column_spaces <- codebook_column_spaces[!is.na(codebook_column_spaces$first_num),]
 
   codebook_column_spaces <- merge(codebook_column_spaces, codebook_variables,
                                   all.x = TRUE)
   codebook_column_spaces <- codebook_column_spaces[
     order(codebook_column_spaces$first_num),]
-  codebook_column_spaces2 <- codebook_column_spaces
+
+
+  value_labels <- get_value_labels(codebook, codebook_column_spaces)
 
   if (!is.null(keep_columns)) {
     if (is.numeric(keep_columns)) {
@@ -136,46 +138,26 @@ spss_ascii_reader <- function(dataset_name,
     }
   }
 
+  # Removes columns not asked for
+  value_labels <- value_labels[value_labels$column %in% codebook_column_spaces$column_number,]
+
+  value_labels <- split.data.frame(value_labels, value_labels$group)
+
+
   dataset <- suppressMessages(readr::read_fwf(dataset_name,
                                               readr::fwf_positions(codebook_column_spaces$first_num,
                                                                    codebook_column_spaces$second_num,
-                                                                   codebook_column_spaces$column_number)))
+                                                                   codebook_column_spaces$column_number), col_types = paste0(rep("c", nrow(codebook_column_spaces)), collapse = "")))
   dataset <- data.table::data.table(dataset)
   column_order <- colnames(dataset)
 
 
-  value_start <- grep("^value labels$",
-                      codebook[,1], ignore.case = TRUE)
-
-  end_row <- grep("\\*|^\\.$", codebook[,1])
-  end_row <- end_row[end_row > value_start][1] - 1
-  if (is.na(end_row)) { end_row <- nrow(codebook) }
-  value_labels <- codebook[value_start:end_row,]
-  value_labels <- gsub("&\\s+", "& ", value_labels)
-  value_labels <- unlist(strsplit(value_labels, "\\s{2,}"))
-  value_labels <- value_labels[!value_labels %in% c(".", "/")]
-
-
   if (value_label_fix) {
-
-    all_column_names <- paste0(codebook_column_spaces2$column_number, "$",
-                              collapse = "|")
-
-    matching_rows <- grep(all_column_names, value_labels)
-
-    for (i in seq(1, length(matching_rows), 1)) {
-      if (i < length(matching_rows)) {
-        value_label_section <-
-          value_labels[matching_rows[i]:(matching_rows[(i + 1)] - 1)]
-      } else {
-        value_label_section <- value_labels[matching_rows[i]:length(value_labels)]
-      }
-      variable_fix <-  value_label_matrixer(value_label_section)
-      names(variable_fix) <- gsub("/", "", names(variable_fix))
-
-      if (names(variable_fix)[1] %in% codebook_column_spaces$column_number
-          && nrow(variable_fix) < nrow(dataset)/2) {
-        dataset <- fix_variable_values(dataset, variable_fix)
+    for (i in 1:length(value_labels)) {
+      column <- as.character(value_labels[[i]][1, 1])
+      if (column %in% codebook_column_spaces$column_number) {
+       value_label_section <- value_label_matrixer(value_labels[[i]])
+       dataset <- fix_variable_values(dataset, value_label_section, column)
       }
     }
     data.table::setcolorder(dataset, column_order)
@@ -192,6 +174,22 @@ spss_ascii_reader <- function(dataset_name,
     }
   }
 
+  # Make numeric columns numeric
+  all_numeric <- function(column) {
+    column_NAs <- sum(is.na(column))
+    column <- suppressWarnings(as.numeric(column))
+    return(all(is.numeric(column) & sum(is.na(column)) == column_NAs))
+  }
+  times <- nrow(dataset) * .10
+  if (times < 100000 & nrow(dataset) > 100000) { times <- 100000 }
+  times <- sample(1:nrow(dataset), times, replace = FALSE)
+  for (i in 1:ncol(dataset)) {
+    if (all((!is.factor(dataset[[i]]) & all_numeric(dataset[[i]][times])))) {
+      suppressWarnings(data.table::set(dataset, j = i, value = as.numeric(dataset[[i]])))
+    }
+  }
+
+  dataset <- as.data.frame(dataset)
   return(dataset)
 }
 

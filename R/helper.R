@@ -1,9 +1,18 @@
 value_label_matrixer <- function(value_label_section) {
-  # column_name <- stringr::str_split(value_label_section, ";;;;;")[[1]][1]
-  column_name <- value_label_section[1]
-  value_label_section <- value_label_section[-1]
+  # In case some labels are on multiple lines
+  plus <- grep("^\\+", value_label_section)
+  if (length(plus) > 0) {
+  for (n in 1:length(plus)) {
+    value_label_section[n-1] <- paste(value_label_section[n-1],
+                                      value_label_section[n],
+                                      collapse = " ")
+  }
+    value_label_section <- value_label_section[-plus]
+  }
 
-  value_label_section <- gsub(" {2,}| /|\\.", "", value_label_section)
+  value_label_section <- value_label_section[2:nrow(value_label_section), 1]
+
+  value_label_section <- gsub(" {2,}| /", "", value_label_section)
   value_label_section <- gsub('"', "'", value_label_section)
   value_label_section <- gsub("'$", "", value_label_section)
   value_label_section <- unlist(stringr::str_split(value_label_section, "' '"))
@@ -13,68 +22,82 @@ value_label_matrixer <- function(value_label_section) {
   value_label_section <- gsub("'", "", value_label_section)
   value_label_section <- trimws(value_label_section)
 
-
   value_label_section <- matrix(value_label_section, ncol = 2, byrow = TRUE)
+  values <- value_label_section[,1]
+  names(values) <- value_label_section[,2]
 
-  colnames(value_label_section) <- c(column_name, "variable_fixer12345")
-  value_label_section <- data.table::data.table(value_label_section)
-  return(value_label_section)
+  return(values)
 }
 
 
-fix_variable_values <- function(dataset, variable_fix) {
+fix_variable_values <- function(dataset, value_label_section, column) {
+  column <- as.integer(grep(paste0("^", column, "$"), names(dataset)))
 
-  column_num <- as.numeric(grep(paste0("^", names(variable_fix)[1], "$"), names(dataset)))
-  dataset[[column_num]] <- gsub("^0([1-9])$", "\\1", dataset[[column_num]])
-  variable_fix <- data.frame(variable_fix)
-  original <- data.frame(unique(dataset[[column_num]]),
-                         unique(dataset[[column_num]]))
-  original <- original[!original[,1] %in% variable_fix[,1],]
-  names(original) <- names(variable_fix)
+  value_label_section <- single_digit(value_label_section)
+  value_label_section <- double_digit(value_label_section)
 
-  if (nrow(original) > 0) {
-    variable_fix <- under10_fixer(variable_fix, original)
+  if (!is.character(dataset[[column]])) {
+  data.table::set(dataset, j = column, value = as.character(dataset[[column]]))
   }
-
-  duplicates <- variable_fix[duplicated(variable_fix[,2]),]
-  if (nrow(duplicates) > 0) {
-    duplicates[,2] <- paste0(duplicates[,2], "69789ladadadada")
+  if (length(value_label_section) < nrow(dataset) / 2) {
+  data.table::set(dataset, j = column,  value = haven::as_factor(haven::labelled(dataset[[column]], value_label_section)))
   }
-
-  variable_fix <- variable_fix[!variable_fix[,1] %in% duplicates[,1],]
-  variable_fix <- variable_fix[!variable_fix[,2] %in% duplicates[,2],]
-  variable_fix <- rbind(variable_fix, duplicates)
-
-  if (any(variable_fix[,1] %in% unique(dataset,by = names(variable_fix[1]))[[column_num]])) {
-    variable_fix <- rbind(variable_fix, original)
-    variable_fix <- variable_fix[!is.na(variable_fix[,1]),]
-    variable_fix <- variable_fix[!duplicated(variable_fix[,1]),]
-
-    dataset[[column_num]] <- factor(dataset[[column_num]], levels = variable_fix[,1], labels = variable_fix[,2])
-  }
-
-    if (nrow(duplicates) > 0) {
-      dataset[[column_num]] <- gsub("69789ladadadada", "",
-                                    dataset[[column_num]], fixed = TRUE)
-
-    }
   return(dataset)
 }
 
-under10_fixer <- function(variable_fix, original) {
-  if (any(grepl("^0[0-9]+", variable_fix[,1])) & !any(grepl("^0[0-9]+", original[,1]))) {
-
-    temp <- variable_fix[,1][gsub("^0([0-9]+)", "\\1", variable_fix[,1]) %in% original[,1]]
-    if (length(temp) > 0) {
-    temp <- as.data.frame(temp)
-    temp$new <- gsub("^0([0-9]+)", "\\1", temp[,1])
-    temp[,1] <- paste0("^", temp[,1], "$")
-
-    for (i in 1:nrow(temp)) {
-      variable_fix[,1] <- gsub(temp[i, 1], temp[i, 2], variable_fix[,1])
-    }
-    }
+single_digit <- function(value_label_section) {
+  if (any(grepl("^[0-9]$", value_label_section)) & !any(grepl("^0[0-9]$", value_label_section))) {
+    single_digit <- value_label_section[grep("^[0-9]$", value_label_section)]
+    names_single_digit <- names(single_digit)
+    single_digit <- paste0("0", single_digit)
+    names(single_digit) <- names_single_digit
+    value_label_section <- c(value_label_section, single_digit)
   }
-  return(variable_fix)
+  return(value_label_section)
 }
 
+double_digit <- function(value_label_section) {
+  if (any(grepl("^0[0-9]$", value_label_section)) & !any(grepl("^[0-9]$", value_label_section))) {
+    double_digit <- value_label_section[grep("^0[0-9]$", value_label_section)]
+    names_double_digit <- names(double_digit)
+    double_digit <- gsub("^.", "", double_digit)
+    names(double_digit) <- names_double_digit
+    value_label_section <- c(value_label_section, double_digit)
+  }
+  return(value_label_section)
+}
+
+get_value_labels <- function(codebook, codebook_column_spaces) {
+  value_start <- grep("^value labels$",
+                      codebook[,1], ignore.case = TRUE)
+
+  end_row <- grep("^\\.$", codebook[,1])
+  end_row <- end_row[end_row > value_start][1] - 1
+  if (is.na(end_row)) { end_row <- nrow(codebook) }
+  value_labels <- codebook[value_start:end_row,]
+  value_labels <- trimws(value_labels)
+  value_labels <- gsub('\\s+\\"$', '"', value_labels)
+  value_labels <- gsub('\\"\\s+([[:alnum:]])', '\\"\\1', value_labels, ignore.case = TRUE)
+  value_labels <- gsub("\\s+\\(", " \\(", value_labels)
+  value_labels <- gsub("&\\s+", "& ", value_labels)
+  value_labels <- unlist(strsplit(value_labels, "\\s{2,}"))
+  value_labels <- value_labels[!value_labels %in% c(".", "/")]
+  value_labels <- value_labels[-1]
+  value_labels <- gsub('"', "'", value_labels)
+  value_labels <- data.frame(value_labels)
+  value_labels$group <- 0
+  value_labels$column <- value_labels$value_labels[1]
+
+  group <- 1
+  column <- value_labels$value_labels[1]
+  for (i in 1:nrow(value_labels)) {
+    value_labels$group[i] <- group
+    value_labels$column[i] <- column
+    if (grepl("\\' \\/$", value_labels$value_labels[i]) |
+        value_labels$value_labels[i + 1] %in% codebook_column_spaces$column_number) {
+      group <- group + 1
+      column <- value_labels$value_labels[i + 1]
+    }
+  }
+  return(value_labels)
+}

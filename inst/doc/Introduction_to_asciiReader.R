@@ -1,5 +1,5 @@
 ## ------------------------------------------------------------------------
-dataset_name <- system.file("extdata", "example_data.txt",
+dataset_name <- system.file("extdata", "example_data.zip",
              package = "asciiSetupReader")
 sps_name <- system.file("extdata", "example_setup.sps",
              package = "asciiSetupReader")
