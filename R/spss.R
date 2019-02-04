@@ -1,7 +1,9 @@
-#' Read ASCII file using SPSS Setup file.
+#' Read fixed-width ASCII file using SPSS Setup file.
 #'
 #' spss_ascii_reader() and sas_ascii_reader() are used when you need to
 #' read an fixed-width ASCII (text) file that comes with a setup file.
+#' These file combinations are sometimes referred to as .txt+.sps, .txt+.sas,
+#' .dat+.sps, or .dat+.sas.
 #' The setup file provides instructions on how to create and name the columns,
 #' and fix the key-value pairs (sometimes called value labels). This is common
 #' in government data, particular data produced before 2010.
@@ -24,8 +26,11 @@
 #'   NULL, will return all columns. Accepts the column number (e.g. 1:5),
 #'   column name (e.g. V1, V2, etc.) or column label (e.g. VICTIM_NAME, CITY,
 #'   etc.).
-#' @param ...
-#' further arguments passed to readr
+#' @param coerce_numeric
+#' If TRUE (default) will make columns where all values can be made numeric
+#' into numeric columns.Useful as FALSE if variables have leading zeros - such
+#' as US Census FIPS codes.
+#'
 #' @return Data.frame of the data from the ASCII file
 #' @export
 #' @examples
@@ -38,7 +43,7 @@
 #' \dontrun{
 #' example <- spss_ascii_reader(dataset_name = dataset_name,
 #'   sps_name = sps_name)
-#' }
+#'
 #'
 #' # Does not fix value labels
 #' example2 <- spss_ascii_reader(dataset_name = dataset_name,
@@ -48,62 +53,39 @@
 #' example3 <- spss_ascii_reader(dataset_name = dataset_name,
 #'   sps_name = sps_name, real_names = FALSE)
 #'
+#' }
 #' # Only returns the first 5 columns
 #' example4 <- spss_ascii_reader(dataset_name = dataset_name,
 #'   sps_name = sps_name, keep_columns = 1:5)
+#'
 spss_ascii_reader <- function(dataset_name,
                               sps_name,
                               value_label_fix = TRUE,
                               real_names = TRUE,
                               keep_columns = NULL,
-                              ...) {
+                              coerce_numeric = TRUE) {
 
-    stopifnot(is.character(dataset_name), length(dataset_name) == 1,
-              is.character(sps_name), length(sps_name) == 1,
-              is.logical(value_label_fix), length(value_label_fix) == 1,
-              is.logical(real_names), length(real_names) == 1)
+  #  .Deprecated("read_ascii_setup")
 
-  setup <- parse_spss(sps_name,
-                      keep_columns = keep_columns,
-                      value_label_fix = value_label_fix)
+  stopifnot(is.character(dataset_name), length(dataset_name) == 1,
+            is.character(sps_name), length(sps_name) == 1,
+            is.logical(value_label_fix), length(value_label_fix) == 1,
+            is.logical(real_names), length(real_names) == 1)
 
-  dataset <- read_data(dataset_name, setup, ...)
-  dataset <- data.table::as.data.table(dataset)
-  column_order <- names(dataset)
+  setup <- parse_setup(sps_name)
+  setup$setup <- selected_columns(keep_columns, setup$setup)
 
-  # Value Labels ------------------------------------------------------------
-      # Removes columns not asked for
-    value_labels <- parse_value_labels(setup)
-
-    if (value_label_fix && length(value_labels) > 0) {
-      for (i in seq_along(value_labels)) {
-        dataset <- fix_variable_values(dataset,
-                                       value_labels[[i]],
-                                       names(value_labels)[i])
-      }
-      data.table::setcolorder(dataset, column_order)
-    }
+  data <- read_data(dataset_name, setup)
 
 
-    # Fixes missing values ----------------------------------------------------
-    missing <- setup$missing
-    if (!is.null(missing)) {
-      dataset <- fix_missing(dataset, missing)
-    }
-
-    if (real_names) {
-      # Fixes column names to real names
-      codebook_variables <- setup$setup[setup$setup$column_number
-                                               %in% names(dataset), ]
-      data.table::setnames(dataset, old = codebook_variables$column_number,
-                           new = codebook_variables$column_name)
-
-    }
+  data <- fix_value_labels(data, setup, value_label_fix)
 
 
-    # Makes columns that should be numeric numeric
-    dataset <- make_cols_numeric(dataset)
-    attributes(dataset)$spec <- NULL
-    dataset <- as.data.frame(dataset)
-  return(dataset)
+  data <- fix_names_missing_numeric(data,
+                                    setup,
+                                    missing,
+                                    real_names,
+                                    coerce_numeric)
+
+  return(data)
 }

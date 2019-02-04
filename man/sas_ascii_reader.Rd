@@ -2,16 +2,16 @@
 % Please edit documentation in R/sas.R
 \name{sas_ascii_reader}
 \alias{sas_ascii_reader}
-\title{Read ASCII file using SAS Setup file.}
+\title{Read fixed-width ASCII file using SAS Setup file.}
 \usage{
 sas_ascii_reader(dataset_name, sas_name, value_label_fix = TRUE,
-  real_names = TRUE, keep_columns = NULL, ...)
+  real_names = TRUE, keep_columns = NULL, coerce_numeric = TRUE)
 }
 \arguments{
 \item{dataset_name}{Name of the ASCII (.txt) file that contains the data.
 This file may be zipped with a file extension of .zip.}
 
-\item{sas_name}{Name of the SAS Setup file - should be a .sps or .txt file.}
+\item{sas_name}{Name of the SAS Setup file - should be a .sas or .txt file.}
 
 \item{value_label_fix}{If TRUE, fixes value labels of the data. e.g. If a
 column is "sex" and has values of 0 or 1, and the setup file says 0 = male
@@ -27,11 +27,15 @@ NULL, will return all columns. Accepts the column number (e.g. 1:5),
 column name (e.g. V1, V2, etc.) or column label (e.g. VICTIM_NAME, CITY,
 etc.).}
 
-\item{...}{further arguments passed to readr}
+\item{coerce_numeric}{If TRUE (default) will make columns where all values can be made numeric
+into numeric columns.Useful as FALSE if variables have leading zeros - such
+as US Census FIPS codes.}
 }
 \description{
 sas_ascii_reader() and spss_ascii_reader() are used when you need to
-read an fixed-width ASCII (text) file that comes with a setup file.
+read an fixed-width ASCII (text) file that comes with a setup file. These file
+combinations are sometimes referred to as .txt+.sps, .txt+.sas,
+.dat+.sps, or .dat+.sas.
 The setup file provides instructions on how to create and name the columns,
 and fix the key-value pairs (sometimes called value labels). This is common
 in government data, particular data produced before 2010.
@@ -46,7 +50,7 @@ sas_name <- system.file("extdata", "example_setup.sas",
 \dontrun{
 example <- sas_ascii_reader(dataset_name = dataset_name,
   sas_name = sas_name)
-}
+
 
 # Does not fix value labels
 example2 <- sas_ascii_reader(dataset_name = dataset_name,
@@ -56,12 +60,15 @@ example2 <- sas_ascii_reader(dataset_name = dataset_name,
 example3 <- sas_ascii_reader(dataset_name = dataset_name,
   sas_name = sas_name, real_names = FALSE)
 
+}
 # Only returns the first 5 columns
 example <- sas_ascii_reader(dataset_name = dataset_name,
   sas_name = sas_name, keep_columns = 1:5)
+
 }
 \seealso{
 \code{\link{spss_ascii_reader}} For using an SPSS setup file
 
 Other ASCII Reader functions: \code{\link{spss_ascii_reader}}
 }
+\concept{ASCII Reader functions}
