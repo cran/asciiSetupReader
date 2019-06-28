@@ -1,3 +1,13 @@
+# asciiSetupReader 2.1.0
+
+* Reorder list of value labels returned from `parse_setup` to be in same order
+  as in setup file.
+* Misc. bug fixes and many new tests.
+
+# asciiSetupReader 2.0.2
+
+* Misc. bug fixes.
+
 # asciiSetupReader 2.0.1
 
 * Fix problem where package didn't work with dev version of Haven.

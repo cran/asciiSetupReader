@@ -19,9 +19,535 @@ test_that("Number of value label columns are correct", {
   expect_equal(length(property_stolen_parsed_sas$value_labels), 15)
   #  expect_equal(length(ASR), 36)
   expect_equal(length(corrections_parsed_sas$value_labels), 9)
-
   expect_equal(length(jail_2010_parsed_sas$value_labels), 123)
+  expect_equal(length(health_nutrition_parsed_sas$value_labels), 36)
+  expect_equal(length(step_in_parsed_sas$value_labels), 4)
+  expect_equal(length(census_police_parsed_sas$value_labels), 76)
+  expect_true(is.null(education_1995_parsed_sas$value_labels))
+  expect_true(is.null(education_1985_parsed_sas$value_labels))
+  expect_true(is.null(cps_1973_parsed_sas$value_labels))
+  # expect_equal(length(cps_2004_parsed_sas$value_labels), )
+  # expect_equal(length(drug_abuse_parsed_sas$value_labels), )
+   expect_true(is.null(british_crime_teen_parsed_sps$value_labels))
+  # expect_equal(length(detroit_parsed_sas$value_labels), )
+  # expect_equal(length(worry_parsed_sas$value_labels), )
+   expect_equal(length(cambridge_parsed_sas$value_labels), 879)
+   #expect_equal(length(guam_parsed_sas$value_labels), )
+   expect_equal(length(china_2002_parsed_sas$value_labels), 79)
+   expect_equal(length(china_1995_parsed_sas$value_labels), 29)
+   expect_equal(length(china_1998_parsed_sas$value_labels), 47)
+   expect_true(is.null(indonesia_parsed_sas$value_labels))
+   expect_equal(length(UN_crime_parsed_sas$value_labels), 119)
+   expect_true(is.null(county_arrest_parsed_sas$value_labels))
+})
 
+
+
+test_that("Cambridge - parsed value labels are accurate", {
+
+  expect_equal(head(names(cambridge_parsed_sas$value_labels)),
+               c("V1",
+                 "V2",
+                 "V3",
+                 "V5",
+                 "V6",
+                 "V7"))
+  expect_equal(tail(names(cambridge_parsed_sas$value_labels)),
+               c("V875",
+                 "V876",
+                 "V877",
+                 "V878",
+                 "V879",
+                 "V880"))
+
+  expect_equal(cambridge_parsed_sas$value_labels$V1,
+               c("(8488) ICPSR STUDY NO." = "8488"))
+  expect_equal(cambridge_parsed_sas$value_labels$V2,
+               c("(2) 2ND VERSION" = "2"))
+  expect_equal(cambridge_parsed_sas$value_labels$V13,
+               c("(0) NONE" = "0",
+                 "(1) ONE" = "1",
+                 "(2) TWO" = "2"))
+  expect_equal(cambridge_parsed_sas$value_labels$V303,
+               c("(1) NOT POOR" = "1",
+                 "(2) POOR" = "2"))
+  expect_equal(cambridge_parsed_sas$value_labels$V308,
+               c("(1) II" = "1",
+                 "(2) III" = "2",
+                 "(3) IV" = "3",
+                 "(4) V" = "4"))
+  expect_equal(cambridge_parsed_sas$value_labels$V879,
+               c("(0) NK-UNASCERTAIN" = "0",
+                 "(1) PAY TAX" = "1",
+                 "(2) AVOID TAX ILLEGL" = "2"))
+  expect_equal(cambridge_parsed_sas$value_labels$V418,
+               c("(0) NK-UNASCERTAIN" = "0",
+                 "(1) <=9 -FEW ERRS" = "1",
+                 "(2) 10-13" = "2",
+                 "(3) 14-18" = "3",
+                 "(4) >=19 -MANY ERRS" = "4"))
+  expect_equal(cambridge_parsed_sas$value_labels$V419,
+               c("(0) NK-UNASCERTAIN" = "0",
+                 "(1) <=9 -HIGH TQ" = "1",
+                 "(2) 10-12" = "2",
+                 "(3) 13-15" = "3",
+                 "(4) >=16 -LOW TQ" = "4"))
+  expect_equal(cambridge_parsed_sas$value_labels$V880,
+               c("(0) NK-UNASCERTAIN" = "0",
+                 "(1) NO" = "1",
+                 "(2) YES" = "2"))
+})
+
+test_that("Guam - parsed value labels are accurate", {
+
+  expect_equal(head(names(guam_parsed_sas$value_labels)),
+               c("RECTYPE",
+                 "RESISTAT",
+                 "STATEOCC",
+                 "CONTYOCC",
+                 "REGION",
+                 "DIVISION"))
+  expect_equal(tail(names(guam_parsed_sas$value_labels)),
+               c("AGE_FLG",
+                 "PLACEINJ",
+                 "ICD282",
+                 "ICD72",
+                 "ICD61",
+                 "ICD34"))
+
+  expect_equal(guam_parsed_sas$value_labels$RECTYPE,
+               c("(1) RESIDENTS" = "1",
+                 "(2) NONRESIDENTS" = "2"))
+  expect_equal(guam_parsed_sas$value_labels$RESISTAT,
+               c("(1) RESIDENTS" = "1",
+                 "(2) INTRASTATE NONRESIDENTS" = "2",
+                 "(3) INTERSTATE NONRESIDENTS" = "3",
+                 "(4) FOREIGN RESIDENTS" = "4"))
+  expect_equal(guam_parsed_sas$value_labels$RACE_R2,
+               c("(1) White" = "1",
+                 "(2) All other races" = "2"))
+  expect_equal(guam_parsed_sas$value_labels$AGE_FLG,
+               c("(1) Calculated age is substituted for reported age" = "1"))
+  expect_equal(guam_parsed_sas$value_labels$FIPCNRES,
+               c("(0) Foreign residents" = "0",
+                 "(999) County less than 100,000 population" = "999"))
+  expect_equal(guam_parsed_sas$value_labels$DAYDEATH,
+               c("(1) Sunday" = "1",
+                 "(2) Monday" = "2",
+                 "(3) Tuesday" = "3",
+                 "(4) Wednesday" = "4",
+                 "(5) Thursday" = "5",
+                 "(6) Friday" = "6",
+                 "(7) Saturday" = "7",
+                 "(9) Unknown" = "9"))
+  expect_equal(guam_parsed_sas$value_labels$KINDBUSS,
+               c("(961) Own home/At home" = "961",
+                 "(970) Retired with no other industry reported" = "970",
+                 "(990) Blank, Unknownr NA" = "990"))
+  expect_equal(guam_parsed_sas$value_labels$USUALOCC,
+               c("(913) Retired with no other occupation reported" = "913",
+                 "(914) Housewife/Homemaker" = "914",
+                 "(915) Student" = "915",
+                 "(916) Volunteer" = "916",
+                 "(917) Unemployed, never worked, disabled, child, infant" = "917",
+                 "(999) Blank, Unknown, NA" = "999"))
+})
+
+
+test_that("China 1995 - parsed value labels are accurate", {
+
+  expect_equal(head(names(china_1995_parsed_sas$value_labels)),
+               c("A3",
+                 "A4",
+                 "A6",
+                 "A7",
+                 "A8",
+                 "A9"))
+  expect_equal(tail(names(china_1995_parsed_sas$value_labels)),
+               c("A39",
+                 "A40",
+                 "A41",
+                 "A47",
+                 "A48",
+                 "A49"))
+
+  expect_equal(china_1995_parsed_sas$value_labels$A3,
+               c("self" = "1",
+                 "spouse" = "2",
+                 "child" = "3",
+                 "child in law" = "4",
+                 "grandchild" = "5",
+                 "parent" = "6",
+                 "parent in law" = "7",
+                 "grandparent" = "8",
+                 "brother or sister" = "9",
+                 "other relative" = "10",
+                 "non-relative" = "11"))
+  expect_equal(china_1995_parsed_sas$value_labels$A4,
+               c("male" = "1",
+                 "female" = "2"))
+  expect_equal(china_1995_parsed_sas$value_labels$A8,
+               c("yes" = "1",
+                 "no" = "2"))
+  expect_equal(china_1995_parsed_sas$value_labels$A20,
+               c("yes" = "1",
+                 "no" = "2"))
+  expect_equal(china_1995_parsed_sas$value_labels$A47,
+               c("unknown code" = "0",
+                 "an enterprise" = "1",
+                 "a government organization or institution" = "2",
+                 "other" = "3"))
+  expect_equal(china_1995_parsed_sas$value_labels$A48,
+               c("unknown code" = "0",
+                 "yes" = "1",
+                 "no" = "2"))
+  expect_equal(china_1995_parsed_sas$value_labels$A49,
+               c("unknown code" = "0",
+                 "employed throughout the year" = "1",
+                 "unemployed some of the time" = "2",
+                 "unemployed throughout the year" = "3"))
+})
+
+
+test_that("China 2002 - parsed value labels are accurate", {
+
+  expect_equal(head(names(china_2002_parsed_sas$value_labels)),
+               c("V3_1",
+                 "V3_2",
+                 "V3_3",
+                 "V3_4",
+                 "V3_101",
+                 "V3_102"))
+  expect_equal(tail(names(china_2002_parsed_sas$value_labels)),
+               c("V3_702",
+                 "V3_701B",
+                 "V3_702B",
+                 "V3_703",
+                 "V3_704",
+                 "V3_705"))
+
+  expect_equal(china_2002_parsed_sas$value_labels$V3_1,
+               c("(1) plain (basin)" = "1",
+                 "(2) hilly area" = "2",
+                 "(3) mountainous area" = "3"))
+  expect_equal(china_2002_parsed_sas$value_labels$V3_2,
+               c("(1) Yes" = "1",
+                 "(2) No" = "2"))
+  expect_equal(china_2002_parsed_sas$value_labels$V3_316D,
+               c("(1) the villager" = "1",
+                 "(2) the village cadre" = "2",
+                 "(3) the township cadre" = "3",
+                 "(4) the county (or upper level cadre)" = "4",
+                 "(5) others" = "5"))
+  expect_equal(china_2002_parsed_sas$value_labels$V3_505A,
+               c("(0) Less than once per year" = "0"))
+  expect_equal(china_2002_parsed_sas$value_labels$V3_506A,
+               c("(0) Less than once per year" = "0"))
+  expect_equal(china_2002_parsed_sas$value_labels$V3_704,
+               c("(1) Yes" = "1",
+                 "(2) No" = "2"))
+  expect_equal(china_2002_parsed_sas$value_labels$V3_705,
+               c("(1) Yes" = "1",
+                 "(2) No" = "2"))
+})
+
+
+test_that("China 1998 - parsed value labels are accurate", {
+
+  expect_equal(head(names(china_1998_parsed_sas$value_labels)),
+               c("RELATION",
+                 "GENDER",
+                 "AGE",
+                 "STUDENT",
+                 "INCOME88",
+                 "RESIDENC"))
+  expect_equal(tail(names(china_1998_parsed_sas$value_labels)),
+               c("IT07T",
+                 "IT07M",
+                 "IT07E",
+                 "IT08T",
+                 "IT08M",
+                 "IT08E"))
+
+  expect_equal(china_1998_parsed_sas$value_labels$RELATION,
+               c("Self" = "1",
+                 "Spouse" = "2",
+                 "Child" = "3",
+                 "Grandchild" = "4",
+                 "Parent" = "5",
+                 "Grandparent" = "6",
+                 "Other Relative" = "7",
+                 "Not Related" = "8",
+                 "Missing" = "9"))
+  expect_equal(china_1998_parsed_sas$value_labels$GENDER,
+               c("Male" = "0",
+                 "Female" = "1",
+                 "Missing" = "9"))
+  expect_equal(china_1998_parsed_sas$value_labels$AGE,
+               c("Missing" = "999"))
+  expect_equal(china_1998_parsed_sas$value_labels$SJ,
+               c("No" = "0",
+                 "Yes" = "1",
+                 "Missing" = "9"))
+  expect_equal(china_1998_parsed_sas$value_labels$IT01T,
+               c("Food" = "1",
+                 "Daily Use Article" = "2",
+                 "Consumer Durables" = "3",
+                 "Other" = "4",
+                 "Missing" = "9"))
+  expect_equal(china_1998_parsed_sas$value_labels$IT08M,
+               c("Missing" = "99999"))
+  expect_equal(china_1998_parsed_sas$value_labels$IT08E,
+               c("Missing" = "99999"))
+})
+
+
+test_that("UN Crime - parsed value labels are accurate", {
+
+  expect_equal(head(names(UN_crime_parsed_sas$value_labels)),
+               c("NNHOM70N",
+                 "NNHOM71N",
+                 "NNHOM72N",
+                 "NNHOM73N",
+                 "NNHOM74N",
+                 "NNHOM75N"))
+  expect_equal(tail(names(UN_crime_parsed_sas$value_labels)),
+               c("PSTF745",
+                 "X2",
+                 "X3",
+                 "X4",
+                 "X5",
+                 "X6"))
+
+  expect_equal(UN_crime_parsed_sas$value_labels$NNHOM70N,
+               c("Blank" = "-9"))
+  expect_equal(UN_crime_parsed_sas$value_labels$ROB74,
+               c("Blank" = "-9"))
+  expect_equal(UN_crime_parsed_sas$value_labels$FRAUD72,
+               c("Blank" = "-9"))
+  expect_equal(UN_crime_parsed_sas$value_labels$TOTC70,
+               c("Blank" = "-9"))
+  expect_equal(UN_crime_parsed_sas$value_labels$TDRUG70N,
+               c("Blank" = "-9"))
+  expect_equal(UN_crime_parsed_sas$value_labels$ACON723,
+               c("Blank" = "-9"))
+  expect_equal(UN_crime_parsed_sas$value_labels$X6,
+               c("Blank" = "-9"))
+})
+
+
+test_that("CPS 2004 - parsed value labels are accurate", {
+
+
+  expect_equal(cps_2004_parsed_sas$value_labels$HURESPLI,
+               c("(-3) REFUSED" = "-3",
+                 "(-2) DONT KNOW" = "-2",
+                 "(-1) BLANK OR NOT IN UNIVERSE" = "-1"))
+  expect_equal(cps_2004_parsed_sas$value_labels$HETELAVL,
+               c("(-3) REFUSED" = "-3",
+                 "(-2) DONT KNOW" = "-2",
+                 "(-1) BLANK OR NOT IN UNIVERSE" = "-1",
+                 "(1) YES" = "1",
+                 "(2) NO" = "2"))
+  expect_equal(cps_2004_parsed_sas$value_labels$HETELHHD,
+               c("(-3) REFUSED" = "-3",
+                 "(-2) DONT KNOW" = "-2",
+                 "(-1) BLANK OR NOT IN UNIVERSE" = "-1",
+                 "(1) YES" = "1",
+                 "(2) NO" = "2"))
+  expect_equal(cps_2004_parsed_sas$value_labels$PEIO1ICD,
+               c("(-3) REFUSED" = "-3",
+                 "(-2) DONT KNOW" = "-2",
+                 "(-1) BLANK OR NOT IN UNIVERSE" = "-1"))
+  expect_equal(cps_2004_parsed_sas$value_labels$PEIO1OCD,
+               c("(-3) REFUSED" = "-3",
+                 "(-2) DONT KNOW" = "-2",
+                 "(-1) BLANK OR NOT IN UNIVERSE" = "-1"))
+  expect_equal(cps_2004_parsed_sas$value_labels$HEQ3,
+               c("(-9) No response" = "-9",
+                 "(-3) Refused" = "-3",
+                 "(-2) Dont know" = "-2",
+                 "(-1) Blank or Not in Universe" = "-1",
+                 "(1) All or almost all calls," = "1",
+                 "(2) More than half," = "2",
+                 "(3) Less than half, or" = "3",
+                 "(4) Very few or none?" = "4"))
+  expect_equal(cps_2004_parsed_sas$value_labels$HRSUPINT,
+               c("(1) Interview" = "1",
+                 "(2) Noninterview" = "2"))
+})
+
+
+test_that("Drug abuse - parsed value labels are accurate", {
+
+
+  expect_equal(drug_abuse_parsed_sas$value_labels$ID,
+               c("(-9) Missing" = "-9"))
+  expect_equal(drug_abuse_parsed_sas$value_labels$RESPCODE,
+               c("(-9) Missing" = "-9"))
+  expect_equal(drug_abuse_parsed_sas$value_labels$ADDICTIONS_COUNSELING ,
+               c("(-9) Missing" = "-9",
+                 "(0) Not Marked" = "0",
+                 "(1) Marked" = "1"))
+  expect_equal(drug_abuse_parsed_sas$value_labels$BSOCA5,
+               c("(-9) Blank / Not ascertained" = "-9",
+                 "(1) Disagree Strongly" = "1",
+                 "(2) Disagree" = "2",
+                 "(3) Uncertain" = "3",
+                 "(4) Agree" = "4",
+                 "(5) Agree Strongly" = "5"))
+  expect_equal(drug_abuse_parsed_sas$value_labels$BSOCA6,
+               c("(-9) Blank / Not ascertained" = "-9",
+                 "(1) Disagree Strongly" = "1",
+                 "(2) Disagree" = "2",
+                 "(3) Uncertain" = "3",
+                 "(4) Agree" = "4",
+                 "(5) Agree Strongly" = "5"))
+  expect_equal(drug_abuse_parsed_sas$value_labels$EOTSCO,
+               c("(-9) Missing" = "-9"))
+  expect_equal(drug_abuse_parsed_sas$value_labels$EOTOPN    ,
+               c("(-9) Missing" = "-9",
+                 "(-5) Not calculated for respondent type" = "-5"))
+})
+
+
+test_that("Detroit - parsed value labels are accurate", {
+
+
+  expect_equal(detroit_parsed_sas$value_labels$I_MONTH,
+               c("(1) January" = "1",
+                 "(2) February" = "2",
+                 "(3) March" = "3",
+                 "(4) April" = "4",
+                 "(5) May" = "5",
+                 "(6) June" = "6",
+                 "(7) July" = "7",
+                 "(8) August" = "8",
+                 "(9) September" = "9",
+                 "(10) October" = "10",
+                 "(11) November" = "11",
+                 "(12) December" = "12"))
+  expect_equal(detroit_parsed_sas$value_labels$A1_YEAR,
+               c("(95) ALL OF LIFE" = "95",
+                 "(97) UNCODEABLE" = "97"))
+  expect_equal(detroit_parsed_sas$value_labels$A1_MONTH,
+               c("(97) UNCODEABLE" = "97"))
+  expect_equal(detroit_parsed_sas$value_labels$D11A,
+               c("(1) IDENTITY" = "1",
+                 "(5) NO" = "5",
+                 "(7) Uncodeable" = "7",
+                 "(8) Dont_Know" = "8",
+                 "(9) Refuse" = "9"))
+  expect_equal(detroit_parsed_sas$value_labels$J1,
+               c("(1) VERY DARK" = "1",
+                 "(2) DARK" = "2",
+                 "(3) MEDIUM" = "3",
+                 "(4) LIGHT" = "4",
+                 "(5) VERY LIGHT" = "5",
+                 "(7) Uncodeable" = "7",
+                 "(8) Dont_Know" = "8",
+                 "(9) Refuse" = "9"))
+  expect_equal(detroit_parsed_sas$value_labels$J5B,
+               c("(97) UNCODEABLE" = "97",
+                 "(98) DONT KNOW" = "98",
+                 "(99) REFUSE" = "99"))
+  expect_equal(detroit_parsed_sas$value_labels$J7,
+               c("(1) IN PERSON" = "1",
+                 "(2) TELEPHONE" = "2",
+                 "(7) Uncodeable" = "7",
+                 "(8) Dont_Know" = "8",
+                 "(9) Refuse" = "9"))
+})
+
+
+test_that("Worry - parsed value labels are accurate", {
+
+
+  expect_equal(worry_parsed_sas$value_labels$PRE1,
+               c("(0) Not at all serious problem" = "0",
+                 "(2) Somewhat serious problem" = "2",
+                 "(4) Moderately serious problem" = "4",
+                 "(6) Very serious problem" = "6"))
+  expect_equal(worry_parsed_sas$value_labels$CONDITION ,
+               c("(1) At beginning" = "1",
+                 "(2) At end" = "2"))
+  expect_equal(worry_parsed_sas$value_labels$C1,
+               c("(0) Not at all likely" = "0",
+                 "(6) Very likely" = "6"))
+  expect_equal(worry_parsed_sas$value_labels$G12,
+               c("(0) Just chance/no one is to blame" = "0",
+                 "(6) Someone at the hospital is to blame" = "6"))
+  expect_equal(worry_parsed_sas$value_labels$G19,
+               c("(0) Just chance/no one is to blame" = "0",
+                 "(6) Someone at the hospital is to blame" = "6"))
+  expect_equal(worry_parsed_sas$value_labels$HEALTH,
+               c("(1) Poor" = "1",
+                 "(2) Fair" = "2",
+                 "(3) Good" = "3",
+                 "(4) Excellent" = "4"))
+  expect_equal(worry_parsed_sas$value_labels$EDUC,
+               c("(1) Less than high school" = "1",
+                 "(2) High school graduate" = "2",
+                 "(3) Some college" = "3",
+                 "(4) College graduate" = "4",
+                 "(5) Graduate degree" = "5"))
+})
+
+
+test_that("Census Police - parsed value labels are accurate", {
+
+
+  expect_equal(census_police_parsed_sas$value_labels$AGCYTYPE,
+               c("(0) Local police department" = "0",
+                 "(1) Sheriffs office" = "1",
+                 "(5) Primary state law enforcement agency" = "5",
+                 "(6) Special jurisdiction" = "6",
+                 "(7) Constable/marshal" = "7"))
+  expect_equal(census_police_parsed_sas$value_labels$SUBTYPE1,
+               c("(1) Public buildings/facilities" = "1",
+                 "(2) Natural resources/parks and recreation" = "2",
+                 "(3) Transportation systems/facilities" = "3",
+                 "(4) Criminal investigations" = "4",
+                 "(5) Special enforcement" = "5",
+                 "(888) Not applicable" = "888"))
+  expect_equal(census_police_parsed_sas$value_labels$TRIBAL,
+               c("(0) Not a tribal agency" = "0",
+                 "(1) Yes, a tribal agency" = "1"))
+  expect_equal(census_police_parsed_sas$value_labels$Q1A1,
+               c("(-9) Blank" = "-9",
+                 "(1) Yes" = "1",
+                 "(2) No" = "2"))
+  expect_equal(census_police_parsed_sas$value_labels$Q3EST,
+               c("(-9) Blank" = "-9",
+                 "(-2) Dont know" = "-2",
+                 "(1) Yes" = "1",
+                 "(2) No" = "2"))
+  expect_equal(census_police_parsed_sas$value_labels$Q6I,
+               c("(-9) Blank" = "-9"))
+  expect_equal(census_police_parsed_sas$value_labels$Q6_TOT,
+               c("(-9) Blank" = "-9"))
+})
+
+
+test_that("Step In - parsed value labels are accurate", {
+
+
+  expect_equal(step_in_parsed_sas$value_labels$NR_DAYS,
+               c("(-99) missing value (date of release (event 2) is unknown or client was still incarcerated at the time of data collection)" = "-99"))
+  expect_equal(step_in_parsed_sas$value_labels$NO_RECORD,
+               c("(1) arrest data not available" = "1"))
+  expect_equal(step_in_parsed_sas$value_labels$EVENT,
+               c("(1) arrest that leads to incarceration" = "1",
+                 "(2) release from jail/prison after arrest (EVENT 1)" = "2",
+                 "(3) arrest that does not lead to incarceration" = "3"))
+  expect_equal(step_in_parsed_sas$value_labels$CHARGE,
+               c("(-99) missing value: type of charge is unknown" = "-99",
+                 "(1) violent: use of dangerous weapon, robbery, assault, battery, homicide, attempted homicide, manslaughter, mugging, kidnap" = "1",
+                 "(2) property: theft, identity theft, burglary, possession stolen vehicle, unauthorized use of vehicle, credit card forgery," = "2",
+                 "(3) drug: drug possession, drug distribution, public intoxication, DUI, drug use, poss. to distribute, drug paraphernalia, m" = "3",
+                 "(4) parole violation" = "4",
+                 "(5) other: failure to appear, possession of firearm, harassment, criminal driving, false police report, child endangerment," = "5",
+                 "(6) sex: prostitution, pimping, rape, sexual assault, sex w/minor" = "6"))
 })
 
 
@@ -1847,5 +2373,86 @@ test_that("Jail survey 2010 - parsed value labels are accurate", {
                  "(1) Estimated" = "1",
                  "(8) Not applicable" = "8",
                  "(9) Dont know" = "9"))
+})
+
+
+
+test_that("India human - parsed value labels are accurate", {
+
+
+  expect_equal(india_human_parsed_sas$value_labels$SURVEY,
+               c("(1) IHDS-I 1" = "1",
+                 "(2) IHDS-II 2" = "2"))
+  expect_equal(india_human_parsed_sas$value_labels$CS18,
+               c("(1) Voc: <1 yr 1" = "1",
+                 "(2) Voc: 1-2 years 2" = "2",
+                 "(3) Voc: 3+ years 3" = "3",
+                 "(4) Others 4" = "4"))
+  expect_equal(india_human_parsed_sas$value_labels$CS19,
+               c("(1) Govt. 1" = "1",
+                 "(2) Private 2" = "2"))
+  expect_equal(india_human_parsed_sas$value_labels$MG11,
+               c("(1) Contractor 1" = "1",
+                 "(2) With a job or Self Employed 2" = "2",
+                 "(3) Without a job 3" = "3"))
+  expect_equal(india_human_parsed_sas$value_labels$MM13,
+               c("(0) No 0" = "0",
+                 "(1) Yes 1" = "1"))
+  expect_equal(india_human_parsed_sas$value_labels$TA6,
+               c("(1) Nicely 1" = "1",
+                 "(2) Somewhat nicely 2" = "2",
+                 "(3) Not nicely 3" = "3"))
+  expect_equal(india_human_parsed_sas$value_labels$MGYEAR1,
+               c("(0) No 0" = "0",
+                 "(1) Yes 1" = "1"))
+})
+
+
+test_that("Health and Nutrition - parsed value labels are accurate", {
+
+
+  expect_equal(health_nutrition_parsed_sas$value_labels$SDDSRVYR,
+               c("(4) NHANES 2005-2006 Public Release" = "4"))
+  expect_equal(health_nutrition_parsed_sas$value_labels$RIAGENDR,
+               c("(1) Male" = "1",
+                 "(2) Female" = "2"))
+  expect_equal(health_nutrition_parsed_sas$value_labels$DMDCITZN,
+               c("(1) Citizen by birth or naturalization" = "1",
+                 "(2) Not a citizen of the US" = "2",
+                 "(7) Refused" = "7",
+                 "(9) Dont know" = "9"))
+  expect_equal(health_nutrition_parsed_sas$value_labels$DMDEDUC3,
+               c("(0) Never Attended / Kindergarten Only" = "0",
+                 "(1) 1st Grade" = "1",
+                 "(2) 2nd Grade" = "2",
+                 "(3) 3rd Grade" = "3",
+                 "(4) 4th Grade" = "4",
+                 "(5) 5th Grade" = "5",
+                 "(6) 6th Grade" = "6",
+                 "(7) 7th Grade" = "7",
+                 "(8) 8th Grade" = "8",
+                 "(9) 9th Grade" = "9",
+                 "(10) 10th Grade" = "10",
+                 "(11) 11th Grade" = "11",
+                 "(12) 12th Grade, No Diploma" = "12",
+                 "(13) High School Graduate" = "13",
+                 "(14) GED or Equivalent" = "14",
+                 "(15) More than high school" = "15",
+                 "(55) Less Than 5th Grade" = "55",
+                 "(66) Less Than 9th Grade" = "66",
+                 "(77) Refused" = "77",
+                 "(99) Dont know" = "99"))
+  expect_equal(health_nutrition_parsed_sas$value_labels$DMDHRBRN,
+               c("(1) Born in 50 US States or Washington, DC" = "1",
+                 "(2) Born in Mexico" = "2",
+                 "(3) Born Elsewhere" = "3",
+                 "(7) Refused" = "7",
+                 "(9) Dont know" = "9"))
+  expect_equal(health_nutrition_parsed_sas$value_labels$SIAINTRP,
+               c("(1) Yes" = "1",
+                 "(2) No" = "2"))
+  expect_equal(health_nutrition_parsed_sas$value_labels$AIALANG,
+               c("(1) English" = "1",
+                 "(2) Spanish" = "2"))
 })
 

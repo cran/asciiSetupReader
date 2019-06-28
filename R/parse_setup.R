@@ -29,7 +29,7 @@
 #' }
 parse_setup <- function(setup_file) {
 
-  if (grepl(".sps(\\.zip)?$", setup_file)) {
+  if (grepl(".sps(\\.zip)?$", setup_file, ignore.case = TRUE)) {
     type <- "sps"
   } else {
     type <- "sas"
@@ -39,10 +39,30 @@ parse_setup <- function(setup_file) {
   variables <- parse_column_names(codebook, type = type)
 
   if (type == "sps") {
-    setup <- codebook[grep2("DATA LIST", codebook):
-                        grep2("^variable labels$", codebook)]
+    second_grep_value <- grep2("^variable labels$", codebook)
+    second_grep_value <- second_grep_value[1]
+    if (is.na(second_grep_value)) {
+      second_grep_value <- length(codebook)
+    }
+    setup <- codebook[grep2("DATA LIST|/VARIABLES =$", codebook):second_grep_value]
+    setup <- gsub("\\([0-9]+\\) |\\.[0-9]+ ", "", setup)
+
+    # If starts with a number, combine with previous row
+    start_with_number <- grep("^[0-9]", setup)
+    if (length(start_with_number) > 0) {
+      for (n in length(start_with_number):1) {
+        setup[start_with_number[n] - 1] <- paste(setup[start_with_number[n] - 1],
+                                                 setup[start_with_number[n]],
+                                                 collapse = " ")
+      }
+      setup <- setup[-start_with_number]
+    }
+    setup <- gsub("([[:alpha:]]+[0-9]* [0-9]+) ([[:alpha:]]+[0-9]*)", "\\1   \\2",
+                  setup)
+
     setup <- gsub("([[:alpha:]]+[0-9]*)\\s+", "\\1 ",
                   setup)
+
     setup <- gsub(" \\(A\\) ", " ", setup)
     setup <- gsub(" ([0-9]+-[0-9]+) ([[:alpha:]])", " \\1   \\2",
                   setup)
@@ -50,7 +70,28 @@ parse_setup <- function(setup_file) {
                   setup)
     setup <- unlist(strsplit(setup, '"\\s{3,}'))
   } else {
-    setup <- codebook[grep2("^INPUT$", codebook):grep("^$", codebook)[grep("^$", codebook) > grep2("^INPUT$", codebook) + 5][1]]
+    second_grep_value <- grep("^$|^;$", codebook)[grep("^$|^;$", codebook) > grep2("^INPUT$", codebook) + 5]
+    second_grep_value <- second_grep_value[1]
+    if (is.na(second_grep_value)) {
+      second_grep_value <- length(codebook)
+    }
+    setup <- codebook[grep2("^INPUT$", codebook):second_grep_value]
+    setup <- gsub("\\([0-9]+\\) |\\.[0-9]+ ", "", setup)
+
+    # If starts with a number, combine with previous row
+    start_with_number <- grep("^[0-9]", setup)
+
+    if (length(start_with_number) > 0) {
+      for (n in length(start_with_number):1) {
+        setup[start_with_number[n] - 1] <- paste(setup[start_with_number[n] - 1],
+                                                 setup[start_with_number[n]],
+                                                 collapse = " ")
+      }
+      setup <- setup[-start_with_number]
+    }
+
+    setup <- gsub("([[:alpha:]]+[0-9]* [0-9]+) ([[:alpha:]]+[0-9]*)", "\\1   \\2",
+                  setup)
     setup <- gsub("([[:alnum:]])\\s{2,}([0-9]+) ", "\\1 \\2 ", setup)
     setup <- gsub("([[:alnum:]])\\s{2,}([0-9]+)$", "\\1 \\2", setup)
     setup <- gsub("([[:alnum:]])\\s{2,}([0-9]+-[0-9]+) ", "\\1 \\2 ", setup)
@@ -74,7 +115,9 @@ parse_setup <- function(setup_file) {
                            c("setup",
                              "value_labels",
                              "missing"))
-  setup$value_labels <- parse_value_labels(setup, type = type)
+  if (!is.null(setup$value_labels)) {
+    setup$value_labels <- parse_value_labels(setup, type = type)
+  }
   setup$setup <- setup$setup[, c("column_number",
                                  "column_name",
                                  "begin",
@@ -99,6 +142,9 @@ parse_missing_sps <- function(codebook, setup) {
   missing <- gsub("(\\S),(\\S)", "\\1, \\2", missing)
   missing <- gsub("\\s{3,}\\(", " \\(", missing)
   missing <- gsub("\\) ", "\\)   ", missing)
+  missing <- gsub(",\\s+(-?[0-9]),", ", \\1,", missing)
+  missing <- gsub(",\\s+(-?[0-9])\\)", ", \\1\\)", missing)
+  missing <- gsub("([0-9]),([0-9])", "\\1, \\2", missing)
   missing <- unlist(strsplit(missing, ",|\\s{2,}"))
 
   missing <- data.frame(variable = gsub(" .*", "", missing),
@@ -129,9 +175,9 @@ parse_missing_sas <- function(codebook, setup) {
   start <- grep2("MISSING VALUE", codebook)
   start <- grep2("^IF", codebook)[grep2("^IF", codebook) > max(start)][1]
   # Some .sas files have "example" code at the beginnig which screws this up
-  if (is.na(start)) return (NULL)
+  if (is.na(start)) return(NULL)
   end <- grep2("\\*/", codebook)[grep2("\\*/", codebook) > start][1]
-  if (length(end) == 0 | all(end <= start)) {
+  if (is.na(end) | length(end) == 0 | all(end <= start)) {
     end <- length(codebook)
   } else {
     end <- min(end[end > start])
@@ -207,8 +253,11 @@ make_thru_missing_rows <- function(missing) {
 parse_codebook <- function(setup_file, type) {
   codebook <- readr::read_lines(setup_file)
   codebook <- stringr::str_trim(codebook)
+
   if (type == "sps") {
-    codebook <- codebook[-c(1:(grep2("^DATA LIST", codebook) - 1))]
+    if (any(grepl("^DATA LIST", codebook, ignore.case = TRUE))) {
+      codebook <- codebook[-c(1:(grep2("^DATA LIST", codebook) - 1))]
+    }
   }
   return(codebook)
 }
@@ -216,34 +265,39 @@ parse_codebook <- function(setup_file, type) {
 
 parse_value_labels <- function(setup, type) {
 
-  if (is.null(setup$value_labels)) {
-    return(NULL)
-  } else {
     value_labels <- setup$value_labels
-    if (type == "sps") {
-      value_labels <- value_labels[value_labels$column %in% setup$setup$column_number, ]
-    } else if (type == "sas") {
-      value_labels <- value_labels[value_labels$column %in% setup$setup$column_number, ]
-    }
+    value_labels <- value_labels[value_labels$column %in% setup$setup$column_number, ]
+
+    value_label_order <- unique(value_labels$column)
     value_labels <- split.data.frame(value_labels, value_labels$column)
     value_label_cols <- c()
     for (i in seq_along(value_labels)) {
       column <- unique(value_labels[[i]]$column)
-      value_labels[[i]] <- value_label_matrixer(value_labels[[i]][[1]])
+      value_labels[[i]] <- value_label_matrixer(value_labels[[i]][[1]], type)
       value_label_cols <- c(value_label_cols, column)
     }
 
     names(value_labels) <- value_label_cols
+    value_labels <- value_labels[value_label_order]
     return(value_labels)
-  }
 }
 
 parse_column_names <- function(codebook, type) {
   # Get the column names
   if (type == "sps") {
-    variables <- codebook[grep2("^variable labels$", codebook):
-                            grep2("^value labels$|missing values|^execute$",
-                                  codebook)[1]]
+    variable_label_location <- grep2("^variable labels$", codebook)
+    if (length(variable_label_location) == 0) {
+      return(NULL)
+    }
+    next_location <- grep2("^value labels$|missing values|^execute$|^.$|\\*RECODE$",
+                           codebook)
+    next_location <- next_location[next_location > variable_label_location]
+    next_location <- next_location[1]
+    next_location <- next_location - 1
+    if (is.na(next_location)) {
+      next_location <- length(codebook) + 1
+    }
+    variables <- codebook[variable_label_location:next_location]
     variables <- gsub("\\'\\'", "\\'", variables)
     variables <- gsub("( \\'[[:alnum:]])\\'([[:alnum:]])", "\\1\\2",
                       variables)
@@ -261,18 +315,31 @@ parse_column_names <- function(codebook, type) {
       variables <- variables[-plus]
     }
   } else if (type == "sas") {
-    variables <- codebook[grep2("^LABEL$", codebook):
-                            grep("^$", codebook)[grep("^$", codebook) >
-                                                   grep2("^LABEL$",
-                                                         codebook)][1]]
+    variable_label_location <- grep2("^LABEL$|^ATTRIB$", codebook)
+    if (length(variable_label_location) == 0) {
+      return(NULL)
+    }
+    next_location <- grep2("^$|^;", codebook)
+    next_location <- next_location[next_location > variable_label_location]
+    next_location <- next_location[1]
+    if (is.na(next_location)) {
+      next_location <- length(codebook)
+    }
+
+
+    variables <- codebook[variable_label_location:next_location]
     variables <- variables[grep("=", variables)]
+    variables <- gsub('\\"\\s+FORMAT=.*$', '\\"', variables)
     variables <- gsub("(\\S)=", "\\1 =", variables)
+    variables <- gsub("=(\\S)", "= \\1", variables)
     variables <- gsub('([[:alpha:]]+\\") ', '\\1   ', variables)
+
+    variables <- gsub(' LABEL =\\"', '  "', variables)
   }
   variables <- unlist(strsplit(variables, '"\\s{3,}'))
 
 
-  variables <- data.frame(column_name = fix_names(variables),
+  variables <- data.frame(column_name   = fix_names(variables),
                           column_number = gsub(" .*", "",
                                                variables),
                           stringsAsFactors = FALSE)

@@ -1,73 +1,119 @@
-value_label_matrixer <- function(value_label_section) {
-  value_label_section <- gsub("'\\.$", "'", value_label_section)
-  value_label_section <- gsub('"\\.$', '"', value_label_section)
+value_label_matrixer <- function(value_label, type) {
+  # Gets rid of column name row
+  value_label <- value_label[2:length(value_label)]
+
+  value_label <- gsub("'\\.$", "'", value_label)
+  value_label <- gsub("=\\[(.*)\\]", "='\\1'", value_label)
+  value_label <- gsub('"\\.$', '"', value_label)
+
+  value_label <- gsub('"', "'", value_label)
+
+
+  # For PSID data which for some reason have the word Wife
+  # surrounded by single quotes sometimes!
+  value_label <- gsub("'Wife''s'", "\\/Wifes", value_label, ignore.case = TRUE)
+  value_label <- gsub("\\/'Wife'", "\\/Wife", value_label,
+                      ignore.case = TRUE)
+  value_label <- gsub("''Wife'", "\\/Wife", value_label, ignore.case = TRUE)
+  value_label <- gsub(" 'Wif'", " Wif", value_label, ignore.case = TRUE)
+  value_label <- gsub(" ([[:alnum:]]+) 'Wife'", " \\1 Wife", value_label,
+       ignore.case = TRUE)
+
+
+
+  # Removes any ' inside the text
+  value_label <- gsub("([[:alpha:]]) '([[:alpha:]]+-?[[:alpha:]]+)'", "\\1 \\2",
+                      value_label)
+  value_label <- gsub("([[:alpha:]]) '([[:alpha:]]+ .*[[:alpha:]]+)'([[:alpha:]]+ .*)'([[:alpha:]]+ .*[[:alpha:]]+)''",
+                      "\\1 \\2 \\3 \\4", value_label)
+  value_label <- gsub("([[:alpha:]]) '([[:alpha:]]+ [[:alpha:]]+ .*[[:alpha:]]+)'",
+                      "\\1 \\2", value_label)
+
   # In case some labels are on multiple lines
-  plus <- grep("^\\+", value_label_section)
+  plus <- grep("^\\+", value_label)
+  # For cases where label is on multiple line but doesn't have a plus
+  apostrophe_plus <- grep("\\'$|^\\'", value_label)
+  num_apostrophes <- stringr::str_count(value_label[apostrophe_plus],
+                                        "'")
+  apostrophe_plus <- apostrophe_plus[num_apostrophes == 1]
+  apostrophe_plus <- apostrophe_plus[!is.na(apostrophe_plus)]
+  value_label[apostrophe_plus] <- gsub("\\'", "", value_label[apostrophe_plus])
+
+  no_apostrophes <- stringr::str_count(value_label, "'")
+  no_apostrophes <- which(no_apostrophes == 0)
+
+  if (type == "sas") {
+    no_equal <- grep("=", value_label, invert = TRUE)
+    value_label[no_equal] <- gsub("\\'", "", value_label[no_equal])
+    plus <- sort(unique(c(plus, no_equal)))
+  }
+  plus <- sort(unique(c(plus, apostrophe_plus, no_apostrophes)))
   if (length(plus) > 0) {
-    for (n in 1:length(plus)) {
-      value_label_section[plus[n] - 1] <- paste(value_label_section[plus[n] - 1],
-                                                value_label_section[plus[n]],
-                                                collapse = " ")
-      value_label_section[plus[n] - 1] <- gsub("\\' *\\+ *\\'", "",
-                                               value_label_section[plus[n] - 1])
+    for (n in length(plus):1) {
+      value_label[plus[n] - 1]  <- gsub("\\'$", "", value_label[plus[n] - 1] )
+      value_label[plus[n] - 1] <- paste(value_label[plus[n] - 1],
+                                        value_label[plus[n]],
+                                        collapse = " ")
+      value_label[plus[n] - 1] <- gsub("\\' *\\+ *\\'", "",
+                                       value_label[plus[n] - 1])
     }
-    value_label_section <- value_label_section[-plus]
+    value_label <- value_label[-plus]
   }
 
-  value_label_section <- value_label_section[2:length(value_label_section)]
 
 
-  value_label_section <- gsub('\\"', "\\'",
-                              value_label_section)
-  value_label_section <- gsub("^''", "'####BLANK####'",
-                              value_label_section)
-  value_label_section <- gsub("^' '", "'####SPACE####'",
-                              value_label_section)
-  value_label_section <- gsub(" '' ", " '####BLANK####' ",
-                              value_label_section)
-  value_label_section <- gsub(" {2,}| /\\.", "", value_label_section)
-  value_label_section <- gsub('"', "'", value_label_section)
-  value_label_section <- gsub("'\\s+.$", "'", value_label_section)
-  value_label_section <- gsub("'$|''", "", value_label_section,
-                              perl = TRUE)
-  value_label_section <- gsub("(?<![<>])=", " ", value_label_section, perl = TRUE)
-  value_label_section <- gsub("\\s+", " ", value_label_section)
-  value_label_section <- gsub("([[:alpha:]])\\'([[:alpha:]])", "\\1 \\2",
-                              value_label_section)
 
-  value_label_section <- unlist(stringr::str_split(value_label_section, "' '"))
-  if (all(grepl("\\s", value_label_section))) {
-    value_label_section <- unlist(stringr::str_split(value_label_section, "'"))
+  value_label <- gsub('\\"', "\\'",
+                      value_label)
+  value_label <- gsub("^''", "'####BLANK####'",
+                      value_label)
+  value_label <- gsub("^' '", "'####SPACE####'",
+                      value_label)
+  value_label <- gsub(" '' ", " '####BLANK####' ",
+                      value_label)
+  value_label <- gsub(" {2,}| /\\.", "", value_label)
+  value_label <- gsub('"', "'", value_label)
+  value_label <- gsub("'\\s+.$", "'", value_label)
+  value_label <- gsub("'$|''", "", value_label,
+                      perl = TRUE)
+  value_label <- gsub("(?<![<>])=", " ", value_label, perl = TRUE)
+  value_label <- gsub("\\s+", " ", value_label)
+  value_label <- gsub("([[:alpha:]])\\'([[:alpha:]])", "\\1 \\2",
+                      value_label)
+
+  value_label <- unlist(stringr::str_split(value_label, "' '"))
+  if (all(grepl("\\s", value_label))) {
+    value_label <- unlist(stringr::str_split(value_label, "'"))
   }
-  value_label_section <- gsub("'| =", "", value_label_section)
-  value_label_section <- stringr::str_trim(value_label_section)
-  value_label_section <- gsub("####BLANK####", "", value_label_section)
-  value_label_section <- gsub("####SPACE####", " ", value_label_section)
+  value_label <- gsub("'| =", "", value_label)
+  value_label <- stringr::str_trim(value_label)
+  value_label <- gsub("####BLANK####", "", value_label)
+  value_label <- gsub("####SPACE####", " ", value_label)
 
-  value_label_section <- matrix(value_label_section, ncol = 2, byrow = TRUE)
-  values <- value_label_section[, 1]
-  names(values) <- value_label_section[, 2]
+  value_label <- matrix(value_label, ncol = 2, byrow = TRUE)
+  values <- value_label[, 1]
+  names(values) <- value_label[, 2]
 
   return(values)
 }
 
 
-fix_variable_values <- function(dataset, value_label_section, column) {
+fix_variable_values <- function(.data, value_label_section, column) {
 
   value_label_section <- single_digit(value_label_section)
   value_label_section <- double_digit(value_label_section)
   value_label_section <- value_label_section[!duplicated(value_label_section)]
 
-  if (!is.character(dataset[[column]])) {
-    data.table::set(dataset, j = column, value = as.character(dataset[[column]]))
+  if (!is.character(.data[[column]])) {
+    data.table::set(.data, j = column, value = as.character(.data[[column]]))
   }
-  data.table::set(dataset, j = column,
-                  value = haven::as_factor(haven::labelled(dataset[[column]],
+  data.table::set(.data, j = column,
+                  value = haven::as_factor(haven::labelled(.data[[column]],
                                                            value_label_section)))
 
 
-  data.table::set(dataset, j = column, value = as.character(dataset[[column]]))
-  return(dataset)
+  data.table::set(.data, j = column, value = as.character(.data[[column]]))
+  return(.data)
 }
 
 single_digit <- function(value_label_section) {
@@ -92,31 +138,31 @@ double_digit <- function(value_label_section) {
   return(value_label_section)
 }
 
-get_value_labels <- function(codebook, column_spaces, type) {
+get_value_labels <- function(codebook, setup, type) {
   if (!any(grepl2("^value labels$|SAS FORMAT STATEMENT|^format$|\\/\\* format$",
                   codebook))) {
     return(NULL)
   }
 
   if (type == "sps") {
-    value_labels <- get_value_labels_sps(codebook, column_spaces)
+    value_labels <- get_value_labels_sps(codebook, setup)
   } else if (type == "sas") {
-    value_labels <- get_value_labels_sas(codebook, column_spaces)
+    value_labels <- get_value_labels_sas(codebook, setup)
   }
 
   for (i in 1:nrow(value_labels)) {
-    if (tolower(value_labels$column[i]) %in% tolower(column_spaces$column_number)) {
+    if (tolower(value_labels$column[i]) %in% tolower(setup$column_number)) {
       value_labels$column[i] <-
-        column_spaces$column_number[tolower(column_spaces$column_number) %in% tolower(value_labels$column[i])]
+        setup$column_number[tolower(setup$column_number) %in% tolower(value_labels$column[i])]
     }
   }
 
   return(value_labels)
 }
 
-get_value_labels_sas <- function(codebook, column_spaces) {
+get_value_labels_sas <- function(codebook, setup) {
   # Gets value labels
-  f_names <- as.character(column_spaces$f_name[!is.na(column_spaces$f_name)])
+  f_names <- as.character(setup$f_name[!is.na(setup$f_name)])
   starting <- c()
   for (f_name in f_names) {
     result <- grep(paste("VALUE", f_name),
@@ -130,7 +176,7 @@ get_value_labels_sas <- function(codebook, column_spaces) {
   starting <- min(starting)
 
   value_position <- grep2("^VALUE ", codebook)
-  next_section <- grep2("^$|\\.|^\\*/$|^;$|^; ?\\*/$", codebook)
+  next_section <- grep2("^$|^\\.$|^\\*/$|^;$|^; ?\\*/$", codebook)
   value_position <- value_position[value_position >= starting]
   value_labels <- codebook[(value_position[1]):(next_section[next_section >= max(value_position)][1]-1)]
   value_labels <- gsub(";\\*\\/", "", value_labels)
@@ -140,9 +186,9 @@ get_value_labels_sas <- function(codebook, column_spaces) {
 
   for (f_name in f_names) {
     value_labels <- gsub(paste0("^VALUE ", f_name, " \\(\\S*\\)"),
-                   paste0("VALUE ", f_name), value_labels,
-                   ignore.case = TRUE)
-    }
+                         paste0("VALUE ", f_name), value_labels,
+                         ignore.case = TRUE)
+  }
 
 
   value_labels <- gsub("^VALUE ", "", value_labels,
@@ -151,13 +197,20 @@ get_value_labels_sas <- function(codebook, column_spaces) {
   value_labels <- gsub("&\\s+", "& ", value_labels)
 
 
-
   value_labels <- gsub("([[:alpha:]]+)\\s+(<?[0-9]+)", "\\1 \\2",
                        value_labels)
   value_labels <- gsub("([[:alpha:]]+)\\s+([[:alpha:]]+)", "\\1 \\2",
                        value_labels)
-  value_labels <- gsub("(-?[[:alnum:]]+=)", "      \\1",
+  value_labels <- gsub("([[:alnum:]]+\\.[[:alnum:]]+=)", "      \\1",
                        value_labels)
+
+
+  value_labels <- gsub("([^\\.]-?[[:alnum:]]+=[^A-z])", "      \\1",
+                       value_labels)
+  # value_labels <- gsub("(\\(?<=[^\\.]-?[[:alnum:]]+=[^A-z])", "      \\1",
+  #      value_labels)
+
+
   value_labels <- trimws(value_labels)
   value_labels <- unlist(strsplit(value_labels, "\\s{2,}"))
 
@@ -168,7 +221,7 @@ get_value_labels_sas <- function(codebook, column_spaces) {
   column <- value_labels$value_labels[1]
   for (i in 1:nrow(value_labels)) {
     value_labels$column[i] <- column
-    if (value_labels$value_labels[i + 1] %in% column_spaces$f_name) {
+    if (value_labels$value_labels[i + 1] %in% setup$f_name) {
       column <- value_labels$value_labels[i + 1]
     }
   }
@@ -176,7 +229,7 @@ get_value_labels_sas <- function(codebook, column_spaces) {
   final_value_labels <- data.frame(stringsAsFactors = FALSE)
   for (col in unique(value_labels$column)) {
     single_value_label <- value_labels[value_labels$column %in% col, ]
-    real_names <- unique(column_spaces$column_number[column_spaces$f_name %in% col])
+    real_names <- unique(setup$column_number[setup$f_name %in% col])
     for (real_name in real_names) {
       temp <- single_value_label
       temp$value_labels[1] <- real_name
@@ -188,16 +241,23 @@ get_value_labels_sas <- function(codebook, column_spaces) {
   return(final_value_labels)
 }
 
-get_value_labels_sps <- function(codebook, codebook_column_spaces) {
+get_value_labels_sps <- function(codebook, setup) {
   value_start <- grep2("^value labels$",
                        codebook)
   end_row <- grep("^\\.$|^$", codebook)
-  end_row <- end_row[end_row > value_start][1] - 1
-  if (is.na(end_row))  end_row <- length(codebook)
+  end_row <- end_row[end_row > value_start[length(value_start)]][1] - 1
+  if (is.na(end_row)) {
+    end_row <- length(codebook)
+  }
+  value_start <- value_start[1]
   value_labels <- codebook[value_start:end_row]
+   # Get rid of "Truncated value... stuff in PSID files
+  value_labels <- gsub('\\/\\*.*\\*\\/', "", value_labels)
   value_labels <- stringr::str_trim(value_labels)
   # value_labels <- gsub("([[:alpha:]])''([[:alpha:]])", "\\1'\\2",
   #                      value_labels)
+
+
   value_labels <- gsub('\\s+\\"$', '"', value_labels)
   value_labels <- gsub('\\"\\s+([[:alnum:]])', '\\"\\1', value_labels)
   value_labels <- gsub("\\s+\\(", " \\(", value_labels)
@@ -209,8 +269,8 @@ get_value_labels_sps <- function(codebook, codebook_column_spaces) {
   value_labels <- gsub('(\\s{2,})([0-9]+)\\s{2,}\\"', '\\1\\2 \\"',
                        value_labels)
 
-  add_spaces <- paste0(codebook_column_spaces$column_number, "   ")
-  names(add_spaces) <- paste0('^', codebook_column_spaces$column_number, " ")
+  add_spaces <- paste0(setup$column_number, "   ")
+  names(add_spaces) <- paste0('^', setup$column_number, " ")
   add_spaces <- add_spaces[!duplicated(add_spaces)]
   add_spaces <- add_spaces[!grepl("^\\*", add_spaces)]
   value_labels <- stringr::str_replace_all(value_labels, add_spaces)
@@ -221,6 +281,7 @@ get_value_labels_sps <- function(codebook, codebook_column_spaces) {
                        "\\1 \\2", value_labels)
   value_labels <- gsub("([[:alpha:]])\\s\\s([[:punct:]])",
                        "\\1 \\2", value_labels)
+  value_labels <- gsub(":  ", ": ", value_labels)
 
   value_labels <- unlist(strsplit(value_labels, "\\s{2,}"))
   value_labels <- value_labels[!value_labels %in% c(".", "/")]
@@ -239,7 +300,7 @@ get_value_labels_sps <- function(codebook, codebook_column_spaces) {
     value_labels$column[i] <- column
     if (grepl("\\' \\/$", value_labels$value_labels[i]) |
         value_labels$value_labels[i + 1] %in%
-        codebook_column_spaces$column_number |
+        setup$column_number |
         (!grepl("\\'", value_labels$value_labels[i + 1]) &
          !grepl("^[0-9]+$", value_labels$value_labels[i + 1]))) {
       column <- value_labels$value_labels[i + 1]

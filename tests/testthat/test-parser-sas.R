@@ -2,36 +2,6 @@ context("sas setup parse")
 
 
 
-test_that("parse_setup is silent", {
-  skip_on_cran()
-  expect_silent(parse_setup(crosswalk_sas_name))
-  expect_silent(parse_setup(parole_sas_name))
-  expect_silent(parse_setup(ucr1985_sas_name))
-  expect_silent(parse_setup(ucr1986_sas_name))
-  expect_silent(parse_setup(ucr2000_sas_name))
-  #  expect_silent(parse_setup(ucr2006_sas_name))
-  expect_silent(parse_setup(sac_sas_name))
-  expect_silent(parse_setup(sex_offender_sas_name))
-  expect_silent(parse_setup(ucr1960_sas_name))
-  expect_silent(parse_setup(weimar_sas_name))
-  expect_silent(parse_setup(acs_sas_name))
-  expect_silent(parse_setup(nibrs_sas_name))
-  expect_silent(parse_setup(prisoners_sas_name))
-  expect_silent(parse_setup(SHR1987_sas_name))
-  expect_silent(parse_setup(SHR1988_sas_name))
-  expect_silent(parse_setup(SHR1981_sas_name))
-  expect_silent(parse_setup(ca_vital_sas_name))
-
-  expect_silent(parse_setup(ncvs_sas_name))
-  expect_silent(parse_setup(jail_1987_sas_name))
-  expect_silent(parse_setup(jail_2010_sas_name))
-  expect_silent(parse_setup(corrections_sas_name))
-
-})
-
-
-
-
 test_that("Right number of columns", {
   skip_on_cran()
   expect_equal(nrow(sac_parsed_sas$setup), 197)
@@ -47,20 +17,146 @@ test_that("Right number of columns", {
   expect_equal(nrow(ucr1985_parsed_sas$setup), 1458)
   expect_equal(nrow(ucr1986_parsed_sas$setup), 1458)
   expect_equal(nrow(ucr2000_parsed_sas$setup), 1448)
-
   expect_equal(nrow(jail_1987_parsed_sas$setup), 176)
-
   expect_equal(nrow(jail_2010_parsed_sas$setup), 200)
-
+  expect_equal(nrow(well_being_parsed_sas$setup), 312)
   expect_equal(nrow(corrections_parsed_sas$setup), 14)
+  expect_equal(nrow(psid_toy_parsed_sas$setup),  3)
+  # expect_equal(nrow(escolar_parsed_sas$setup),  1307)
+  expect_equal(nrow(health_nutrition_parsed_sas$setup),  43)
+  expect_equal(nrow(india_human_parsed_sas$setup),  337)
+  expect_equal(nrow(step_in_parsed_sas$setup), 8)
+  expect_equal(nrow(education_1985_parsed_sas$setup), 21)
+  expect_equal(nrow(education_1995_parsed_sas$setup), 69)
+  expect_equal(nrow(cps_1973_parsed_sas$setup), 269)
+  expect_equal(nrow(census_police_parsed_sas$setup), 92)
+  expect_equal(nrow(british_crime_teen_parsed_sas$setup), 374)
+  expect_equal(nrow(drug_abuse_parsed_sas$setup),         337)
+  expect_equal(nrow(detroit_parsed_sas$setup),            369)
+  expect_equal(nrow(worry_parsed_sas$setup),              486)
+  expect_equal(nrow(cps_2004_parsed_sas$setup),           286)
+  expect_equal(nrow(cambridge_parsed_sas$setup), 880)
+  expect_equal(nrow(guam_parsed_sas$setup), 115)
+  expect_equal(nrow(china_2002_parsed_sas$setup), 259)
+  expect_equal(nrow(china_1995_parsed_sas$setup), 102)
+  expect_equal(nrow(china_1998_parsed_sas$setup), 51)
+  expect_equal(nrow(indonesia_parsed_sas$setup), 10)
+  expect_equal(nrow(UN_crime_parsed_sas$setup), 121)
+  expect_equal(nrow(county_arrest_parsed_sas$setup), 19)
+
 
 
 })
 
 
-test_that("Starting number is correct", {
+test_that("Column numbers are correct", {
   skip_on_cran()
 
+
+
+
+
+  expect_equal(head(british_crime_teen_parsed_sas$setup$begin), c(1, 7, 13,
+                                                                  16, 18, 19))
+  expect_equal(head(british_crime_teen_parsed_sas$setup$end),   c(6, 12, 15,
+                                                                  17, 18, 19))
+  expect_equal(tail(british_crime_teen_parsed_sas$setup$begin), c(685, 686, 690,
+                                                                  691, 695, 696))
+  expect_equal(tail(british_crime_teen_parsed_sas$setup$end),   c(685, 689, 690,
+                                                                  694, 695, 697))
+
+
+  expect_equal(head(drug_abuse_parsed_sas$setup$begin), c(1, 27, 53,
+                                                          79, 105, 131))
+  expect_equal(head(drug_abuse_parsed_sas$setup$end),   c(26, 52, 78,
+                                                          104, 130, 156))
+  expect_equal(tail(drug_abuse_parsed_sas$setup$begin), c(1161, 1165, 1180,
+                                                          1195, 1210, 1212))
+  expect_equal(tail(drug_abuse_parsed_sas$setup$end),   c(1164, 1179, 1194,
+                                                          1209, 1211, 1215))
+
+
+  expect_equal(head(detroit_parsed_sas$setup$begin), c(1, 9, 17,
+                                                       25, 40, 48))
+  expect_equal(head(detroit_parsed_sas$setup$end),   c(8, 16, 24,
+                                                       39, 47, 55))
+  expect_equal(tail(detroit_parsed_sas$setup$begin), c(4849, 4857, 4865,
+                                                       4873, 4881, 4889))
+  expect_equal(tail(detroit_parsed_sas$setup$end),   c(4856, 4864, 4872,
+                                                       4880, 4888, 4896))
+
+
+  expect_equal(head(worry_parsed_sas$setup$begin), c(1, 5, 7,
+                                                     8, 9, 10))
+  expect_equal(head(worry_parsed_sas$setup$end),   c(4, 6, 7,
+                                                     8, 9, 10))
+  expect_equal(tail(worry_parsed_sas$setup$begin), c(676, 677, 678,
+                                                     679, 694, 709))
+  expect_equal(tail(worry_parsed_sas$setup$end),   c(676, 677, 678,
+                                                     693, 708, 723))
+
+
+  expect_equal(head(cps_2004_parsed_sas$setup$begin), c(1, 16, 20,
+                                                        22, 25, 27))
+  expect_equal(head(cps_2004_parsed_sas$setup$end),   c(15, 19, 21,
+                                                        24, 26, 28))
+  expect_equal(tail(cps_2004_parsed_sas$setup$begin), c(590, 592, 594,
+                                                        596, 598, 599))
+  expect_equal(tail(cps_2004_parsed_sas$setup$end),   c(591, 593, 595,
+                                                        597, 598, 608))
+
+
+  expect_equal(head(step_in_parsed_sas$setup$begin), c(1, 5, 7,
+                                                       18, 31, 35))
+  expect_equal(head(step_in_parsed_sas$setup$end),   c(4, 6, 17,
+                                                       30, 34, 35))
+  expect_equal(tail(step_in_parsed_sas$setup$begin), c(7, 18, 31,
+                                                       35, 36, 37))
+  expect_equal(tail(step_in_parsed_sas$setup$end),   c(17, 30, 34,
+                                                       35, 36, 39))
+
+  expect_equal(head(education_1985_parsed_sas$setup$begin), c(1, 3, 8,
+                                                              22, 52, 77))
+  expect_equal(head(education_1985_parsed_sas$setup$end),   c(2, 7, 21,
+                                                              51, 76, 94))
+  expect_equal(tail(education_1985_parsed_sas$setup$begin), c(141, 143, 144,
+                                                              145, 151, 152))
+  expect_equal(tail(education_1985_parsed_sas$setup$end),   c(142, 143, 144,
+                                                              150, 151, 152))
+
+  expect_equal(head(education_1995_parsed_sas$setup$begin), c(1, 3, 8,
+                                                              13, 27, 57))
+  expect_equal(head(education_1995_parsed_sas$setup$end),   c(2, 7, 12,
+                                                              26, 56, 76))
+  expect_equal(tail(education_1995_parsed_sas$setup$begin), c(331, 332, 333,
+                                                              334, 335, 336))
+  expect_equal(tail(education_1995_parsed_sas$setup$end),   c(331, 332, 333,
+                                                              334, 335, 336))
+
+  expect_equal(head(cps_1973_parsed_sas$setup$begin), c(1, 2, 11,
+                                                        12, 13, 14))
+  expect_equal(head(cps_1973_parsed_sas$setup$end),   c(1, 10, 11,
+                                                        12, 13, 14))
+  expect_equal(tail(cps_1973_parsed_sas$setup$begin), c(554, 561, 568,
+                                                        575, 579, 580))
+  expect_equal(tail(cps_1973_parsed_sas$setup$end),   c(560, 567, 574,
+                                                        578, 579, 582))
+
+  expect_equal(head(census_police_parsed_sas$setup$begin), c(1, 9, 13,
+                                                             21, 29, 30))
+  expect_equal(head(census_police_parsed_sas$setup$end),   c(8, 12, 20,
+                                                             28, 29, 31))
+  expect_equal(tail(census_police_parsed_sas$setup$begin), c(619, 645, 647,
+                                                             669, 689, 714))
+  expect_equal(tail(census_police_parsed_sas$setup$end),   c(644, 646, 668,
+                                                             688, 713, 721))
+
+
+
+
+
+  expect_equal(psid_toy_parsed_sas$setup$begin,
+               c(1, 2, 7))
 
   expect_equal(sac_parsed_sas$setup$begin[1:20], c(1, 3, 6,
                                                    10, 16, 17,
@@ -191,10 +287,53 @@ test_that("Starting number is correct", {
                                                      30, 31))
 
 
-})
+  expect_equal(head(well_being_parsed_sas$setup$begin),
+               c(1, 2, 7,
+                 9, 10, 13))
+  expect_equal(tail(well_being_parsed_sas$setup$begin),
+               c(405, 406, 407,
+                 408, 409, 418))
 
-test_that("Ending number is correct", {
-  skip_on_cran()
+
+
+
+  expect_equal(head(health_nutrition_parsed_sas$setup$begin),
+               c(1, 6, 9,
+                 12, 15, 18))
+  expect_equal(tail(health_nutrition_parsed_sas$setup$begin),
+               c(118, 121, 124,
+                 138, 152, 155))
+
+  expect_equal(head(india_human_parsed_sas$setup$begin),
+               c(1, 2, 4,
+                 6, 8, 11))
+  expect_equal(tail(india_human_parsed_sas$setup$begin),
+               c(1022, 1023, 1025,
+                 1027, 1028, 1029))
+
+
+
+  expect_equal(head(india_human_parsed_sas$setup$end),
+               c(1, 3, 5,
+                 7, 10, 11))
+  expect_equal(tail(india_human_parsed_sas$setup$end),
+               c(1022, 1024, 1026,
+                 1027, 1028, 1030))
+
+  expect_equal(head(health_nutrition_parsed_sas$setup$end),
+               c(5, 8, 11,
+                 14, 17, 20))
+  expect_equal(tail(health_nutrition_parsed_sas$setup$end),
+               c(120, 123, 137,
+                 151, 154, 157))
+
+
+  expect_equal(head(well_being_parsed_sas$setup$end),
+               c(1, 6, 8,
+                 9, 12, 13))
+  expect_equal(tail(well_being_parsed_sas$setup$end),
+               c(405, 406, 407,
+                 408, 417, 419))
 
   expect_equal(weimar_parsed_sas$setup$end, c(2, 4, 5,
                                               22, 29, 36, 43, 50, 57, 64, 71, 78,
@@ -236,8 +375,13 @@ test_that("Ending number is correct", {
                                                           5329, 5330, 5331, 5334, 5337,
                                                           5340, 5343, 5346, 5349, 5352,
                                                           5355, 5358, 5361, 5364, 5367))
-  expect_equal(ucr1960_parsed_sas$setup$end[1:20], c(1, 3, 10, 12, 13, 17, 22, 23, 30, 37,
-                                                     41, 43, 44, 51, 54, 57, 62, 65, 68, 72))
+  expect_equal(ucr1960_parsed_sas$setup$end[1:20], c(1, 3, 10, 12,
+                                                     13, 17, 22,
+                                                     23, 30, 37,
+                                                     41, 43, 44,
+                                                     51, 54, 57,
+                                                     62, 65, 68,
+                                                     72))
   expect_equal(ucr1960_parsed_sas$setup$end[1429:1448], c(1936, 1937, 1938, 1939, 1940,
                                                           1941, 1942, 1943, 1944,  1945, 1946,
                                                           1947, 1948, 1949, 1950, 1951,
@@ -265,19 +409,386 @@ test_that("Ending number is correct", {
   expect_equal(head(ncvs_parsed_sas$setup$end), c(6, 9, 11, 14, 18, 19))
   expect_equal(tail(ncvs_parsed_sas$setup$end), c(716, 718, 726, 728, 730, 731))
 
-  expect_equal(head(jail_1987_parsed_sas$setup$end), c(4, 5, 6, 9, 12, 14))
-  expect_equal(tail(jail_1987_parsed_sas$setup$end), c(633, 635, 637, 639, 641, 642))
+  expect_equal(head(jail_1987_parsed_sas$setup$end), c(4, 5, 6,
+                                                       9, 12, 14))
+  expect_equal(tail(jail_1987_parsed_sas$setup$end), c(633, 635, 637,
+                                                       639, 641, 642))
 
 
-  expect_equal(head(jail_2010_parsed_sas$setup$end), c(21, 30, 32, 77, 122, 154))
-  expect_equal(tail(jail_2010_parsed_sas$setup$end), c(1126, 1132, 1134, 1140, 1142, 1150))
+  expect_equal(head(jail_2010_parsed_sas$setup$end), c(21, 30, 32,
+                                                       77, 122, 154))
+  expect_equal(tail(jail_2010_parsed_sas$setup$end), c(1126, 1132, 1134,
+                                                       1140, 1142, 1150))
 
-  expect_equal(corrections_parsed_sas$setup$end, c(1, 5, 7, 8, 9, 10, 14, 18, 22, 26, 27, 29, 30, 31))
+  expect_equal(corrections_parsed_sas$setup$end, c(1, 5, 7, 8, 9,
+                                                   10, 14, 18, 22,
+                                                   26, 27, 29, 30, 31))
+
+
+  expect_equal(psid_toy_parsed_sas$setup$end,
+               c(1, 6, 13))
+
+
+  expect_equal(head(cambridge_parsed_sas$setup$column_number),
+               c("V1", "V2", "V3",
+                 "V4", "V5", "V6"))
+  expect_equal(head(cambridge_parsed_sas$setup$column_name),
+               c("ICPSR_STUDY_NUMBER_8488",
+                 "ICPSR_EDITION_NUMBER_2",
+                 "ICPSR_PART_NUMBER",
+                 "ICPSR_SEQ_ID_NUMBER",
+                 "CONVICTED_10_13",
+                 "CONVICTED_14_16"))
+  expect_equal(tail(cambridge_parsed_sas$setup$column_number),
+               c("V875", "V876", "V877",
+                 "V878", "V879", "V880"))
+  expect_equal(tail(cambridge_parsed_sas$setup$column_name),
+               c("DEL_DAMAGE_PROP_W_O_STL",
+                 "STEAL_FRM_SLOT_MACHINES",
+                 "SHOPLIFT_FROM_SHOPS",
+                 "READING_ABILITY",
+                 "TAX_EVASION",
+                 "POOR_LIVING_CONDITIONS"))
+
+
+  expect_equal(head(guam_parsed_sas$setup$column_number),
+               c("RESVD1", "CERTNO", "RESVD2",
+                 "SEQNUM", "RECTYPE", "RESISTAT"))
+  expect_equal(head(guam_parsed_sas$setup$column_name),
+               c("RESERVED_POSITIONS",
+                 "CERTIFICATE_NUMBER",
+                 "RESERVED_POSITIONS",
+                 "SEQUENCE_NUMBER",
+                 "RECORD_TYPE",
+                 "RESIDENT_STATUS"))
+  expect_equal(tail(guam_parsed_sas$setup$column_number),
+               c("RCOND15", "RCOND16", "RCOND17",
+                 "RCOND18", "RCOND19", "RCOND20"))
+  expect_equal(tail(guam_parsed_sas$setup$column_name),
+               c("RECORD_CONDITION",
+                 "RECORD_CONDITION",
+                 "RECORD_CONDITION",
+                 "RECORD_CONDITION",
+                 "RECORD_CONDITION",
+                 "RECORD_CONDITION"))
+
+
+  expect_equal(head(china_2002_parsed_sas$setup$column_number),
+               c("ORDER", "SM", "COUN",
+                 "VILL", "V3_1", "V3_2"))
+  expect_equal(head(china_2002_parsed_sas$setup$column_name),
+               c("ORDER",
+                 "SM",
+                 "County_Number",
+                 "Village_Number",
+                 "Geographical_condition",
+                 "Suburb_of_large_middle_city_jiaoqu"))
+  expect_equal(tail(china_2002_parsed_sas$setup$column_number),
+               c("V3_709A", "V3_709B", "V3_710A",
+                 "V3_710B", "V3_8OLD", "V3_8NEW"))
+  expect_equal(tail(china_2002_parsed_sas$setup$column_name),
+               c("The_amount_loan_for_poverty_relief_in_1998",
+                 "The_amount_loan_for_poverty_relief_in_1998",
+                 "The_amount_loan_for_poverty_relief_in_1997",
+                 "The_amount_loan_for_poverty_relief_in_1997",
+                 "V3_8OLD",
+                 "V3_8NEW"))
+
+
+  expect_equal(head(china_1995_parsed_sas$setup$column_number),
+               c("N1", "A1", "A2",
+                 "A3", "A4", "A5"))
+  expect_equal(head(china_1995_parsed_sas$setup$column_name),
+               c("N1",
+                 "A1",
+                 "A2",
+                 "A3",
+                 "A4",
+                 "A5"))
+  expect_equal(tail(china_1995_parsed_sas$setup$column_number),
+               c("A96", "A97", "A98",
+                 "A99", "PROVINCE", "COUNTY"))
+  expect_equal(tail(china_1995_parsed_sas$setup$column_name),
+               c("A96",
+                 "A97",
+                 "A98",
+                 "A99",
+                 "PROVINCE",
+                 "COUNTY"))
+
+
+  expect_equal(head(china_1998_parsed_sas$setup$column_number),
+               c("UCODE", "RELATION", "GENDER",
+                 "AGE", "STUDENT", "INCOME88"))
+  expect_equal(head(china_1998_parsed_sas$setup$column_name),
+               c("HOUSEHOLD_CODE",
+                 "RELATIONSHIP_TO_HEAD_OF_HOUSEHOLD",
+                 "SEX_OF_HOUSEHOLD_MEMBER",
+                 "AGE_OF_HOUSEHOLD_MEMBER",
+                 "STUDENT_STATUS_OF_HOUSEHOLD_MEMBER",
+                 "INCOME_RECIPIENT_IN_1988"))
+  expect_equal(tail(china_1998_parsed_sas$setup$column_number),
+               c("IT07M", "IT07E", "IT08T",
+                 "IT08M", "IT08E", "NHHMEM"))
+  expect_equal(tail(china_1998_parsed_sas$setup$column_name),
+               c("ESTIMATED_MARKET_PRICE_YUAN",
+                 "AMOUNT_PAID_BY_MEMBER_YUAN",
+                 "ITEM_TYPE",
+                 "ESTIMATED_MARKET_PRICE_YUAN",
+                 "AMOUNT_PAID_BY_MEMBER_YUAN",
+                 "OF_MEMBERS_IN_HOUSEHOLD"))
+
+
+  expect_equal(head(indonesia_parsed_sas$setup$column_number),
+               c("CASE", "NCOMB", "ITEM",
+                 "KS01", "KS02RP", "NCOMB1A"))
+  expect_equal(head(indonesia_parsed_sas$setup$column_name),
+               c("IFLS_HHLD_NUMBER",
+                 "TOTAL_OF_ITEMS_CONSUMED",
+                 "TYPES_OF_STAPLE_FOODS_LISTED",
+                 "COMBINATION_CODE",
+                 "NUMERIC_VALUE_TOTAL_EXPENSE_IN_PAST_WEE",
+                 "TOTAL_ITEMS_SELF_PRODUCED"))
+  expect_equal(tail(indonesia_parsed_sas$setup$column_number),
+               c("KS02RP", "NCOMB1A", "KS03RP",
+                 "HHID93", "HHID", "COMMID93"))
+  expect_equal(tail(indonesia_parsed_sas$setup$column_name),
+               c("NUMERIC_VALUE_TOTAL_EXPENSE_IN_PAST_WEE",
+                 "TOTAL_ITEMS_SELF_PRODUCED",
+                 "NUMERIC_VALUE_TOTAL_SELF_PRODUCED_CONSU",
+                 "HHID_93_EA_HHNUM_00",
+                 "case",
+                 "COMMUNITY_ID_TO_MATCH_IFLS2_COMMID93"))
+
+
+  expect_equal(head(UN_crime_parsed_sas$setup$column_number),
+               c("ID", "COUNTRY", "NNHOM70N",
+                 "NNHOM71N", "NNHOM72N", "NNHOM73N"))
+  expect_equal(head(UN_crime_parsed_sas$setup$column_name),
+               c("ID",
+                 "COUNTRY",
+                 "MURDER_CONVICTIONS_1970",
+                 "MURDER_CONVICTIONS_1971",
+                 "MURDER_CONVICTIONS_1972",
+                 "MURDER_CONVICTIONS_1973"))
+  expect_equal(tail(UN_crime_parsed_sas$setup$column_number),
+               c("PSTF745", "X2", "X3",
+                 "X4", "X5", "X6"))
+  expect_equal(tail(UN_crime_parsed_sas$setup$column_name),
+               c("PRISON_STAFF_1974_1975",
+                 "X2",
+                 "X3",
+                 "X4",
+                 "X5",
+                 "X6"))
+
+
+  expect_equal(head(county_arrest_parsed_sas$setup$column_number),
+               c("V1", "V2", "V3",
+                 "V4", "V5", "V6"))
+  expect_equal(head(county_arrest_parsed_sas$setup$column_name),
+               c("ICPSR_STUDY_NUMBER",
+                 "ICPSR_EDITION_NUMBER",
+                 "ICPSR_PART_NUMBER",
+                 "ICPSR_SEQUENCE_NUMBER",
+                 "STATE_CODE",
+                 "COUNTY_CODE"))
+  expect_equal(tail(county_arrest_parsed_sas$setup$column_number),
+               c("V14", "V15", "V16",
+                 "V17", "V18", "V19"))
+  expect_equal(tail(county_arrest_parsed_sas$setup$column_name),
+               c("ROBBERY",
+                 "ASSAULT",
+                 "BURGLARY",
+                 "LARCENY",
+                 "VEHICLE_THEFT",
+                 "ARSON"))
+
+
 })
 
 
-test_that("Original names are correct", {
+test_that("Column names are correct", {
   skip_on_cran()
+
+  expect_equal(head(cambridge_parsed_sas$setup$column_number),
+               c("V1", "V2", "V3",
+                 "V4", "V5", "V6"))
+  expect_equal(head(cambridge_parsed_sas$setup$column_name),
+               c("ICPSR_STUDY_NUMBER_8488",
+                 "ICPSR_EDITION_NUMBER_2",
+                 "ICPSR_PART_NUMBER",
+                 "ICPSR_SEQ_ID_NUMBER",
+                 "CONVICTED_10_13",
+                 "CONVICTED_14_16"))
+  expect_equal(tail(cambridge_parsed_sas$setup$column_number),
+               c("V875", "V876", "V877",
+                 "V878", "V879", "V880"))
+  expect_equal(tail(cambridge_parsed_sas$setup$column_name),
+               c("DEL_DAMAGE_PROP_W_O_STL",
+                 "STEAL_FRM_SLOT_MACHINES",
+                 "SHOPLIFT_FROM_SHOPS",
+                 "READING_ABILITY",
+                 "TAX_EVASION",
+                 "POOR_LIVING_CONDITIONS"))
+
+
+  expect_equal(head(guam_parsed_sas$setup$column_number),
+               c("RESVD1", "CERTNO", "RESVD2",
+                 "SEQNUM", "RECTYPE", "RESISTAT"))
+  expect_equal(head(guam_parsed_sas$setup$column_name),
+               c("RESERVED_POSITIONS",
+                 "CERTIFICATE_NUMBER",
+                 "RESERVED_POSITIONS",
+                 "SEQUENCE_NUMBER",
+                 "RECORD_TYPE",
+                 "RESIDENT_STATUS"))
+  expect_equal(tail(guam_parsed_sas$setup$column_number),
+               c("RCOND15", "RCOND16", "RCOND17",
+                 "RCOND18", "RCOND19", "RCOND20"))
+  expect_equal(tail(guam_parsed_sas$setup$column_name),
+               c("RECORD_CONDITION",
+                 "RECORD_CONDITION",
+                 "RECORD_CONDITION",
+                 "RECORD_CONDITION",
+                 "RECORD_CONDITION",
+                 "RECORD_CONDITION"))
+
+
+  expect_equal(head(china_2002_parsed_sas$setup$column_number),
+               c("ORDER", "SM", "COUN",
+                 "VILL", "V3_1", "V3_2"))
+  expect_equal(head(china_2002_parsed_sas$setup$column_name),
+               c("ORDER",
+                 "SM",
+                 "County_Number",
+                 "Village_Number",
+                 "Geographical_condition",
+                 "Suburb_of_large_middle_city_jiaoqu"))
+  expect_equal(tail(china_2002_parsed_sas$setup$column_number),
+               c("V3_709A", "V3_709B", "V3_710A",
+                 "V3_710B", "V3_8OLD", "V3_8NEW"))
+  expect_equal(tail(china_2002_parsed_sas$setup$column_name),
+               c("The_amount_loan_for_poverty_relief_in_1998",
+                 "The_amount_loan_for_poverty_relief_in_1998",
+                 "The_amount_loan_for_poverty_relief_in_1997",
+                 "The_amount_loan_for_poverty_relief_in_1997",
+                 "V3_8OLD",
+                 "V3_8NEW"))
+
+
+  expect_equal(head(china_1995_parsed_sas$setup$column_number),
+               c("N1", "A1", "A2",
+                 "A3", "A4", "A5"))
+  expect_equal(head(china_1995_parsed_sas$setup$column_name),
+               c("N1",
+                 "A1",
+                 "A2",
+                 "A3",
+                 "A4",
+                 "A5"))
+  expect_equal(tail(china_1995_parsed_sas$setup$column_number),
+               c("A96", "A97", "A98",
+                 "A99", "PROVINCE", "COUNTY"))
+  expect_equal(tail(china_1995_parsed_sas$setup$column_name),
+               c("A96",
+                 "A97",
+                 "A98",
+                 "A99",
+                 "PROVINCE",
+                 "COUNTY"))
+
+
+  expect_equal(head(china_1998_parsed_sas$setup$column_number),
+               c("UCODE", "RELATION", "GENDER",
+                 "AGE", "STUDENT", "INCOME88"))
+  expect_equal(head(china_1998_parsed_sas$setup$column_name),
+               c("HOUSEHOLD_CODE",
+                 "RELATIONSHIP_TO_HEAD_OF_HOUSEHOLD",
+                 "SEX_OF_HOUSEHOLD_MEMBER",
+                 "AGE_OF_HOUSEHOLD_MEMBER",
+                 "STUDENT_STATUS_OF_HOUSEHOLD_MEMBER",
+                 "INCOME_RECIPIENT_IN_1988"))
+  expect_equal(tail(china_1998_parsed_sas$setup$column_number),
+               c("IT07M", "IT07E", "IT08T",
+                 "IT08M", "IT08E", "NHHMEM"))
+  expect_equal(tail(china_1998_parsed_sas$setup$column_name),
+               c("ESTIMATED_MARKET_PRICE_YUAN",
+                 "AMOUNT_PAID_BY_MEMBER_YUAN",
+                 "ITEM_TYPE",
+                 "ESTIMATED_MARKET_PRICE_YUAN",
+                 "AMOUNT_PAID_BY_MEMBER_YUAN",
+                 "OF_MEMBERS_IN_HOUSEHOLD"))
+
+
+  expect_equal(head(indonesia_parsed_sas$setup$column_number),
+               c("CASE", "NCOMB", "ITEM",
+                 "KS01", "KS02RP", "NCOMB1A"))
+  expect_equal(head(indonesia_parsed_sas$setup$column_name),
+               c("IFLS_HHLD_NUMBER",
+                 "TOTAL_OF_ITEMS_CONSUMED",
+                 "TYPES_OF_STAPLE_FOODS_LISTED",
+                 "COMBINATION_CODE",
+                 "NUMERIC_VALUE_TOTAL_EXPENSE_IN_PAST_WEE",
+                 "TOTAL_ITEMS_SELF_PRODUCED"))
+  expect_equal(tail(indonesia_parsed_sas$setup$column_number),
+               c("KS02RP", "NCOMB1A", "KS03RP",
+                 "HHID93", "HHID", "COMMID93"))
+  expect_equal(tail(indonesia_parsed_sas$setup$column_name),
+               c("NUMERIC_VALUE_TOTAL_EXPENSE_IN_PAST_WEE",
+                 "TOTAL_ITEMS_SELF_PRODUCED",
+                 "NUMERIC_VALUE_TOTAL_SELF_PRODUCED_CONSU",
+                 "HHID_93_EA_HHNUM_00",
+                 "case",
+                 "COMMUNITY_ID_TO_MATCH_IFLS2_COMMID93"))
+
+
+  expect_equal(head(UN_crime_parsed_sas$setup$column_number),
+               c("ID", "COUNTRY", "NNHOM70N",
+                 "NNHOM71N", "NNHOM72N", "NNHOM73N"))
+  expect_equal(head(UN_crime_parsed_sas$setup$column_name),
+               c("ID",
+                 "COUNTRY",
+                 "MURDER_CONVICTIONS_1970",
+                 "MURDER_CONVICTIONS_1971",
+                 "MURDER_CONVICTIONS_1972",
+                 "MURDER_CONVICTIONS_1973"))
+  expect_equal(tail(UN_crime_parsed_sas$setup$column_number),
+               c("PSTF745", "X2", "X3",
+                 "X4", "X5", "X6"))
+  expect_equal(tail(UN_crime_parsed_sas$setup$column_name),
+               c("PRISON_STAFF_1974_1975",
+                 "X2",
+                 "X3",
+                 "X4",
+                 "X5",
+                 "X6"))
+
+
+  expect_equal(head(county_arrest_parsed_sas$setup$column_number),
+               c("V1", "V2", "V3",
+                 "V4", "V5", "V6"))
+  expect_equal(head(county_arrest_parsed_sas$setup$column_name),
+               c("ICPSR_STUDY_NUMBER",
+                 "ICPSR_EDITION_NUMBER",
+                 "ICPSR_PART_NUMBER",
+                 "ICPSR_SEQUENCE_NUMBER",
+                 "STATE_CODE",
+                 "COUNTY_CODE"))
+  expect_equal(tail(county_arrest_parsed_sas$setup$column_number),
+               c("V14", "V15", "V16",
+                 "V17", "V18", "V19"))
+  expect_equal(tail(county_arrest_parsed_sas$setup$column_name),
+               c("ROBBERY",
+                 "ASSAULT",
+                 "BURGLARY",
+                 "LARCENY",
+                 "VEHICLE_THEFT",
+                 "ARSON"))
+
+
+
+
 
   expect_equal(sac_parsed_sas$setup$column_number[1:20], c("TRINUM", "SUBNO", "TODDATYR",
                                                            "DATSTAR", "CONSTATE", "Q1JSEX",
@@ -494,5 +1005,408 @@ test_that("Original names are correct", {
                  "DETAILED_CATEGORIZATION_OF_MOST_SERIOUS_SENTENCED_OFFENSE",
                  "RACE_HISPANIC_ETHNICITY_OF_INMATE",
                  "AGE_AT_ADMISSION"))
+
+
+
+  expect_equal(head(well_being_parsed_sas$setup$column_number),
+               c("WB16REL", "WB16YRID", "WB16SN",
+                 "WB16SEX", "WB16AGE", "WB16IWMODE"))
+  expect_equal(head(well_being_parsed_sas$setup$column_name),
+               c("RELEASE_NUMBER",
+                 "X2015_FAMILY_INTERVIEW_ID_NUMBER",
+                 "SEQUENCE_NUMBER_15",
+                 "SEX_OF_R",
+                 "AGE_OF_R_ON_DEC_31_2015",
+                 "MODE_OF_INTERVIEW"))
+
+
+  expect_equal(tail(well_being_parsed_sas$setup$column_number),
+               c("WB16BKSECH", "WB16BKSECI", "WB16BKSECJ",
+                 "WB16BKSECK", "WB16WT", "WB16DEV"))
+  expect_equal(tail(well_being_parsed_sas$setup$column_name),
+               c("WTR_BACKED_UP_SECTION_H",
+                 "WTR_BACKED_UP_SECTION_I",
+                 "WTR_BACKED_UP_SECTION_J",
+                 "WTR_BACKED_UP_SECTION_K",
+                 "WELLBEING_CROSS_SECTIONAL_WEIGHT",
+                 "DEVICE_TYPE_FOR_WEB_LOGIN"))
+
+  expect_equal(psid_toy_parsed_sas$setup$column_number,
+               c("ER66001", "ER66002", "ER71426"))
+  expect_equal(psid_toy_parsed_sas$setup$column_name,
+               c("RELEASE_NUMBER",
+                 "X2017_FAMILY_INTERVIEW_ID_NUMBER",
+                 "TOTAL_FAMILY_INCOME_2016"))
+
+
+  expect_equal(head(health_nutrition_parsed_sas$setup$column_number),
+               c("SEQN",
+                 "SDDSRVYR",
+                 "RIDSTATR",
+                 "RIDEXMON",
+                 "RIAGENDR",
+                 "RIDAGEYR"))
+  expect_equal(tail(health_nutrition_parsed_sas$setup$column_number),
+               c("MIAINTRP",
+                 "AIALANG",
+                 "WTINT2YR",
+                 "WTMEC2YR",
+                 "SDMVPSU",
+                 "SDMVSTRA"))
+
+  expect_equal(head(health_nutrition_parsed_sas$setup$column_name),
+               c("Respondent_sequence_number",
+                 "Data_Release_Number",
+                 "Interview_Examination_Status",
+                 "Six_month_time_period",
+                 "Gender",
+                 "Age_at_Screening_Adjudicated_Recode"))
+  expect_equal(tail(health_nutrition_parsed_sas$setup$column_name),
+               c("Interpreter_used_in_MEC_Interview",
+                 "Language_of_ACASI_Interview",
+                 "Full_Sample_2_Year_Interview_Weight",
+                 "Full_Sample_2_Year_MEC_Exam_Weight",
+                 "Masked_Variance_Pseudo_PSU",
+                 "Masked_Variance_Pseudo_Stratum"))
+
+
+  expect_equal(head(india_human_parsed_sas$setup$column_number),
+               c("SURVEY",
+                 "STATEID",
+                 "DISTID",
+                 "PSUID",
+                 "HHID",
+                 "HHSPLITID"))
+  expect_equal(tail(india_human_parsed_sas$setup$column_number),
+               c("MGYEAR5",
+                 "NMIG5",
+                 "MGMONTHS5",
+                 "MGYEAR1",
+                 "NMIG1",
+                 "MGMONTHS1"))
+
+  expect_equal(head(india_human_parsed_sas$setup$column_name),
+               c("IHDS_I_2005_or_IHDS_II_2012",
+                 "State_code",
+                 "District_code",
+                 "PSU_village_neighborhood_code",
+                 "Household_ID_3_digit",
+                 "Split_household_ID"))
+  expect_equal(tail(india_human_parsed_sas$setup$column_name),
+               c("HQ6_4_1_Migrant_five_years_ago_or_less",
+                 "HQ6_4_1_migrations_in_last_5_years",
+                 "HQ6_4_7_total_months_gone_in_last_5_years",
+                 "HQ6_4_8_Migrant_one_year_ago_or_less",
+                 "HQ6_4_1_migrations_in_last_1_year",
+                 "HQ6_4_7_total_months_gone_in_last_1_year"))
+
+
+
+
+
+
+
+
+  expect_equal(head(step_in_parsed_sas$setup$column_number),
+               c("CID",
+                 "RCTR",
+                 "FSDATE",
+                 "EVENT_DATE",
+                 "NR_DAYS",
+                 "NO_RECORD"))
+  expect_equal(tail(step_in_parsed_sas$setup$column_number),
+               c("FSDATE",
+                 "EVENT_DATE",
+                 "NR_DAYS",
+                 "NO_RECORD",
+                 "EVENT",
+                 "CHARGE"))
+  expect_equal(head(step_in_parsed_sas$setup$column_name),
+               c("CID",
+                 "RCTR",
+                 "FSDATE",
+                 "EVENT_DATE",
+                 "NR_DAYS",
+                 "NO_RECORD"))
+  expect_equal(tail(step_in_parsed_sas$setup$column_name),
+               c("FSDATE",
+                 "EVENT_DATE",
+                 "NR_DAYS",
+                 "NO_RECORD",
+                 "EVENT",
+                 "CHARGE"))
+
+
+  expect_equal(head(education_1985_parsed_sas$setup$column_number),
+               c("FIPST",
+                 "AGENCY",
+                 "STID85",
+                 "NAME85",
+                 "STREET85",
+                 "CITY85"))
+  expect_equal(tail(education_1985_parsed_sas$setup$column_number),
+               c("GSHI85",
+                 "FISCAL85",
+                 "BOARD85",
+                 "CMSA85",
+                 "MSC85",
+                 "BOUND85"))
+  expect_equal(head(education_1985_parsed_sas$setup$column_name),
+               c("FIPST",
+                 "AGENCY",
+                 "STID85",
+                 "NAME85",
+                 "STREET85",
+                 "CITY85"))
+  expect_equal(tail(education_1985_parsed_sas$setup$column_name),
+               c("GSHI85",
+                 "FISCAL85",
+                 "BOARD85",
+                 "CMSA85",
+                 "MSC85",
+                 "BOUND85"))
+
+
+  expect_equal(head(education_1995_parsed_sas$setup$column_number),
+               c("FIPST",
+                 "AGENCY",
+                 "SCHNO",
+                 "STID95",
+                 "LEANM95",
+                 "SEASCH95"))
+  expect_equal(tail(education_1995_parsed_sas$setup$column_number),
+               c("IASIAN95",
+                 "IHISP95",
+                 "IBLACK95",
+                 "IWHITE95",
+                 "IETH95",
+                 "IPUTCH95"))
+  expect_equal(head(education_1995_parsed_sas$setup$column_name),
+               c("FIPS_STATE_CODE_FOR_LOCATION_OF_SCHOOL",
+                 "UNIQUE_SYSTEM_ID_NCES_ASSIGNED",
+                 "SCHOOL_NUMBER_WITHIN_STATE_NCES",
+                 "STATE_AGENCY_ID",
+                 "NAME_OF_OPERATING_AGENCY",
+                 "STATE_SCHOOL_ID"))
+  expect_equal(tail(education_1995_parsed_sas$setup$column_name),
+               c("ADJUSTED_ASIAN_PACIFIC_ISLANDER_STU_FLAG",
+                 "ADJUSTED_HISPANIC_STUDENTS_FLAG",
+                 "ADJUSTED_BLACK_NON_HISPANIC_STUDENT_FLAG",
+                 "ADJUSTED_WHITE_NON_HISPANIC_STUDENT_FLAG",
+                 "ADJUSTED_ETHNICITY_FLAG",
+                 "ADJUSTED_PUPIL_TEACHER_RATIO_FLAG"))
+
+
+  expect_equal(head(cps_1973_parsed_sas$setup$column_number),
+               c("V1001",
+                 "V1002",
+                 "V1003",
+                 "V1004",
+                 "V1005",
+                 "V1006"))
+  expect_equal(tail(cps_1973_parsed_sas$setup$column_number),
+               c("V1264",
+                 "V1265",
+                 "V1266",
+                 "V1267",
+                 "V1268",
+                 "V1269"))
+  expect_equal(head(cps_1973_parsed_sas$setup$column_name),
+               c("SMON",
+                 "HHSEQNUM",
+                 "HNUM",
+                 "SUBH",
+                 "STATS1",
+                 "STATS2"))
+  expect_equal(tail(cps_1973_parsed_sas$setup$column_name),
+               c("AWAIT3",
+                 "AWAIT4",
+                 "AWAIT5",
+                 "ICPSR_STUDY_NUMBER_7616",
+                 "ICPSR_EDITION_NUMBER_1",
+                 "ICPSR_PART_NUMBER_001"))
+
+
+  expect_equal(head(census_police_parsed_sas$setup$column_number),
+               c("CSLLEA08_ID",
+                 "AGCYTYPE",
+                 "SUBTYPE1",
+                 "SUBTYPE2",
+                 "TRIBAL",
+                 "Q1A1"))
+  expect_equal(tail(census_police_parsed_sas$setup$column_number),
+               c("CITY",
+                 "STATE",
+                 "ZIP",
+                 "STATENAME",
+                 "COUNTY",
+                 "FIPS"))
+  expect_equal(head(census_police_parsed_sas$setup$column_name),
+               c("AGENCY_IDENTIFIER",
+                 "TYPE_OF_AGENCY",
+                 "SPECIAL_JURISDICTION_GENERAL_TYPE",
+                 "SPECIAL_JURISDICTION_SPECIFIC_TYPE",
+                 "TRIBAL_AGENCY_INDICATOR",
+                 "Q1A1_FIRST_RESPONSE_TO_CRIMINAL_INCIDENTS"))
+  expect_equal(tail(census_police_parsed_sas$setup$column_name),
+               c("CITY",
+                 "STATE_CODE",
+                 "ZIP",
+                 "NAME_OF_STATE",
+                 "COUNTY_NAME",
+                 "FIPS_CODE"))
+
+
+  expect_equal(head(british_crime_teen_parsed_sas$setup$column_number),
+               c("ROW_LAB",
+                 "TB_CASE",
+                 "AR_CODE",
+                 "T_SN",
+                 "T_SCRN",
+                 "BOOSTER"))
+  expect_equal(tail(british_crime_teen_parsed_sas$setup$column_number),
+               c("T69",
+                 "T70",
+                 "T71",
+                 "T72",
+                 "T73",
+                 "T74"))
+  expect_equal(head(british_crime_teen_parsed_sas$setup$column_name),
+               c("ROW_LAB",
+                 "TB_CASE",
+                 "AR_CODE",
+                 "T_SN",
+                 "T_SCRN",
+                 "BOOSTER"))
+  expect_equal(tail(british_crime_teen_parsed_sas$setup$column_name),
+               c("T69",
+                 "T70",
+                 "T71",
+                 "T72",
+                 "T73",
+                 "T74"))
+
+
+  expect_equal(head(drug_abuse_parsed_sas$setup$column_number),
+               c("DEGREE_SPECIFY_OTHER",
+                 "DISCIPLINE",
+                 "DISCIPLINE_OTHER",
+                 "STATE_CREDENTIALS_SPECIFY",
+                 "NATIONAL_CERTIFICATION_OT",
+                 "LICENSURE_SPECIFY"))
+  expect_equal(tail(drug_abuse_parsed_sas$setup$column_number),
+               c("DOCSUP",
+                 "DOCLEAD",
+                 "EOTDIV",
+                 "EOTTOL",
+                 "EOTSCO",
+                 "EOTOPN"))
+  expect_equal(head(drug_abuse_parsed_sas$setup$column_name),
+               c("Degree_other",
+                 "Discipline",
+                 "Discipline_Other",
+                 "State_substance_abuse_counseling_credentials_Not_in_CD",
+                 "National_certification_Other_Not_in_CD",
+                 "Licensure_Specify_Not_in_CD"))
+  expect_equal(tail(drug_abuse_parsed_sas$setup$column_name),
+               c("Organizational_Support_Subscale_RAND_section_D",
+                 "Leadership_sub_scale_section_D",
+                 "Divergence_sub_scale_section_E",
+                 "Tolerance_for_ambiguity_section_E",
+                 "Service_Coordination",
+                 "Openness"))
+
+
+  expect_equal(head(detroit_parsed_sas$setup$column_number),
+               c("CASEID",
+                 "IWERID",
+                 "CASETYPE",
+                 "FINALWGT",
+                 "STRATUM",
+                 "CLUSTER"))
+  expect_equal(tail(detroit_parsed_sas$setup$column_number),
+               c("J5A",
+                 "J5B",
+                 "J5C",
+                 "J5D",
+                 "J6",
+                 "J7"))
+  expect_equal(head(detroit_parsed_sas$setup$column_name),
+               c("CASEID",
+                 "IWER_ID",
+                 "CASETYPE",
+                 "FINAL_SAMPLE_WEIGHT",
+                 "STRATUM",
+                 "CLUSTER"))
+  expect_equal(tail(detroit_parsed_sas$setup$column_name),
+               c("IF_NO_WERE_FAMILY_MEMBERS_OR_FRIENDS_PRESENT",
+                 "NUMBER_OF_OTHER_PEOPLE_PRESENT",
+                 "DID_RESPONDENT_CONSULT_WITH_OTHERS_BEFORE_RESPONDING",
+                 "DID_OTHERS_PRESENT_TRY_TO_ANSWER_FOR_RESPONDENT",
+                 "DID_R_SEEM_GUARDED_NERVOUS_OR_SUSPICIOUS_ABOUT_THE_INTERVIEW",
+                 "WAS_INTERVIEW_CONDUCTED_IN_PERSON_OR_BY_TELEPHONE"))
+
+
+  expect_equal(head(worry_parsed_sas$setup$column_number),
+               c("SUBJ",
+                 "VERSION",
+                 "PRE1",
+                 "POST1",
+                 "PRE2",
+                 "POST2"))
+  expect_equal(tail(worry_parsed_sas$setup$column_number),
+               c("HOSPNEXT",
+                 "EDUC",
+                 "CHILDREN",
+                 "BIS",
+                 "EXTRAVER",
+                 "STABLE"))
+  expect_equal(head(worry_parsed_sas$setup$column_name),
+               c("Subject_identification_number",
+                 "Version",
+                 "Overall_how_serious_a_problem_is_patient_safety_in_U_S_healthcare_today",
+                 "How_serious_a_problem_is_patient_safety",
+                 "Overall_how_serious_a_problem_is_medical_errors_in_U_S_healthcare_today",
+                 "How_serious_a_problem_is_medical_errors"))
+  expect_equal(tail(worry_parsed_sas$setup$column_name),
+               c("How_likely_are_you_to_spend_a_night_in_the_hospital_in_the_coming_year",
+                 "Your_highest_education_level",
+                 "How_many_children_if_any_do_you_have_at_home",
+                 "BIS_Behavioral_Inhibition_scale",
+                 "Extraversion_scale",
+                 "Stability_scale"))
+
+
+  expect_equal(head(cps_2004_parsed_sas$setup$column_number),
+               c("HRHHID",
+                 "HRYEAR4",
+                 "HURESPLI",
+                 "HUFINAL",
+                 "HUSPNISH",
+                 "HETENURE"))
+  expect_equal(tail(cps_2004_parsed_sas$setup$column_number),
+               c("HEQ2C",
+                 "HEQ2D",
+                 "HEQ2E",
+                 "HEQ3",
+                 "HRSUPINT",
+                 "HWSUPWGT"))
+  expect_equal(head(cps_2004_parsed_sas$setup$column_name),
+               c("HRHHID",
+                 "HRYEAR4",
+                 "HURESPLI",
+                 "HUFINAL",
+                 "HUSPNISH",
+                 "HETENURE"))
+  expect_equal(tail(cps_2004_parsed_sas$setup$column_name),
+               c("HEQ2C",
+                 "HEQ2D",
+                 "HEQ2E",
+                 "HEQ3",
+                 "HRSUPINT",
+                 "HWSUPWGT"))
+
+
+
 
 })

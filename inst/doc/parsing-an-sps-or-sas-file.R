@@ -6,7 +6,7 @@ knitr::opts_chunk$set(
 
 ## ------------------------------------------------------------------------
 # Using the example .sps setup file included with the package
-sps_name <- system.file("extdata", "sacramento.sps",
+sps_name <- system.file("extdata", "example_setup.sps",
                           package = "asciiSetupReader")
 example <- asciiSetupReader::parse_setup(sps_name)
 
