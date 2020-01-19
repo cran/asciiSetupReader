@@ -1,3 +1,9 @@
+# asciiSetupReader 2.3.0
+
+* Misc. bug fixes.
+* Change package to read in fixed-width files from `readr` to `vroom` to 
+  significantly increase read time.
+
 # asciiSetupReader 2.2.0
 
 * Adds an addin to use the `read_ascii_setup()` function interactively. This allows

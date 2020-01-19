@@ -42,9 +42,19 @@ test_that("Right number of missing values", {
   expect_true(is.null(indonesia_parsed_sps$missing))
   expect_equal(nrow(UN_crime_parsed_sps$missing), 357)
   expect_equal(nrow(county_arrest_parsed_sps$missing), 13)
-
-
   expect_true(is.null(escolar_2006_parsed_sps$missing))
+
+
+  expect_true(is.null(mtf_1999_parsed_sps$missing))
+  expect_equal(nrow(mtf_2003_parsed_sps$missing), 108)
+  expect_equal(nrow(mtf_1990_parsed_sps$missing), 206)
+  expect_equal(nrow(mtf_1989_parsed_sps$missing), 224)
+  expect_equal(nrow(mtf_2004_parsed_sps$missing), 230)
+  expect_equal(nrow(mtf_2002_parsed_sps$missing), 108)
+  expect_equal(nrow(mtf_1993_parsed_sps$missing), 206)
+  expect_equal(nrow(mtf_1991_parsed_sps$missing), 206)
+  expect_equal(nrow(mtf_1992_parsed_sps$missing), 206)
+  expect_equal(nrow(mtf_1979_parsed_sps$missing), 544)
 })
 
 
@@ -618,4 +628,225 @@ test_that("Dutch election has right missing values", {
                  "V763", "V764", "V765"))
 })
 
+
+
+
+
+
+test_that("Monitoring the Future 2003 has right missing values", {
+  expect_equal(head(mtf_2003_parsed_sps$missing$variable),
+               c("CASEID", "V13", "V16",
+                 "V17", "V5", "V1"))
+  expect_equal(head(mtf_2003_parsed_sps$missing$values),
+               c("-9", "-9", "-9",
+                 "-9", "-9", "-9"))
+
+  expect_equal(tail(mtf_2003_parsed_sps$missing$variable),
+               c("V112", "V113", "V114",
+                 "V205", "V206", "V207"))
+  expect_equal(tail(mtf_2003_parsed_sps$missing$values),
+               c("-9", "-9", "-9",
+                 "-9", "-9", "-9"))
+
+  expect_equal(head(unique(mtf_2003_parsed_sps$missing$variable)),
+               c("CASEID", "V13", "V16",
+                 "V17", "V5", "V1"))
+  expect_equal(tail(unique(mtf_2003_parsed_sps$missing$variable)),
+               c("V112", "V113", "V114",
+                 "V205", "V206", "V207"))
+})
+
+
+
+test_that("Monitoring the Future 1990 has right missing values", {
+  expect_equal(head(mtf_1990_parsed_sps$missing$variable),
+               c("V1", "V3", "V4",
+                 "V4", "V5", "V5"))
+  expect_equal(head(mtf_1990_parsed_sps$missing$values),
+               c("99", "9", "99999",
+                 "99999 THRU HIGHEST", "0", "9"))
+
+  expect_equal(tail(mtf_1990_parsed_sps$missing$variable),
+               c("V145", "V145", "V146",
+                 "V146", "V147", "V147"))
+  expect_equal(tail(mtf_1990_parsed_sps$missing$values),
+               c("0", "9", "0",
+                 "9", "0", "9"))
+
+  expect_equal(head(unique(mtf_1990_parsed_sps$missing$variable)),
+               c("V1", "V3", "V4",
+                 "V5", "V13", "V16"))
+  expect_equal(tail(unique(mtf_1990_parsed_sps$missing$variable)),
+               c("V142", "V143", "V144",
+                 "V145", "V146", "V147"))
+})
+
+
+
+test_that("Monitoring the Future 1989 has right missing values", {
+  expect_equal(head(mtf_1989_parsed_sps$missing$variable),
+               c("V1", "V1", "V3",
+                 "V3", "V4", "V4"))
+  expect_equal(head(mtf_1989_parsed_sps$missing$values),
+               c("0000099", "0000099 THRU HIGHEST", "0000009",
+                 "0000009 THRU HIGHEST", "0099999", "0099999 THRU HIGHEST"))
+
+  expect_equal(tail(mtf_1989_parsed_sps$missing$variable),
+               c("V205", "V205", "V206",
+                 "V206", "V207", "V207"))
+  expect_equal(tail(mtf_1989_parsed_sps$missing$values),
+               c("0000000", "0000008 THRU HIGHEST", "0000000",
+                 "0000008 THRU HIGHEST", "0000000", "0000008 THRU HIGHEST"))
+
+  expect_equal(head(unique(mtf_1989_parsed_sps$missing$variable)),
+               c("V1", "V3", "V4",
+                 "V5", "V13", "V16"))
+  expect_equal(tail(unique(mtf_1989_parsed_sps$missing$variable)),
+               c("V202", "V203", "V204",
+                 "V205", "V206", "V207"))
+})
+
+
+
+test_that("Monitoring the Future 2004 has right missing values", {
+  expect_equal(head(mtf_2004_parsed_sps$missing$variable),
+               c("V1", "V1", "V3",
+                 "V3", "V4", "V4"))
+  expect_equal(head(mtf_2004_parsed_sps$missing$values),
+               c("99 THRU HI", "99", "9 THRU HI",
+                 "9", "99999 THRU HI", "99999"))
+
+  expect_equal(tail(mtf_2004_parsed_sps$missing$variable),
+               c("V9001", "V9001", "V9002",
+                 "V9002", "V9003", "V9003"))
+  expect_equal(tail(mtf_2004_parsed_sps$missing$values),
+               c("9998 THRU HI", "9999", "8 THRU HI",
+                 "9", "8 THRU HI", "9"))
+
+  expect_equal(head(unique(mtf_2004_parsed_sps$missing$variable)),
+               c("V1", "V3", "V4",
+                 "V5", "V13", "V16"))
+  expect_equal(tail(unique(mtf_2004_parsed_sps$missing$variable)),
+               c("V205", "V206", "V207",
+                 "V9001", "V9002", "V9003"))
+})
+
+
+
+test_that("Monitoring the Future 2002 has right missing values", {
+  expect_equal(head(mtf_2002_parsed_sps$missing$variable),
+               c("V13", "V16", "V17",
+                 "V5", "V1", "V3"))
+  expect_equal(head(mtf_2002_parsed_sps$missing$values),
+               c("-9", "-9", "-9",
+                 "-9", "-9", "-9"))
+
+  expect_equal(tail(mtf_2002_parsed_sps$missing$variable),
+               c("V113", "V114", "V205",
+                 "V206", "V207", "CASEID"))
+  expect_equal(tail(mtf_2002_parsed_sps$missing$values),
+               c("-9", "-9", "-9",
+                 "-9", "-9", "-9"))
+
+  expect_equal(head(unique(mtf_2002_parsed_sps$missing$variable)),
+               c("V13", "V16", "V17",
+                 "V5", "V1", "V3"))
+  expect_equal(tail(unique(mtf_2002_parsed_sps$missing$variable)),
+               c("V113", "V114", "V205",
+                 "V206", "V207", "CASEID"))
+})
+
+
+test_that("Monitoring the Future 1993 has right missing values", {
+  expect_equal(head(mtf_1993_parsed_sps$missing$variable),
+               c("V1", "V3", "V4",
+                 "V4", "V5", "V5"))
+  expect_equal(head(mtf_1993_parsed_sps$missing$values),
+               c("99", "9", "99999",
+                 "99999 THRU HIGHEST", "0", "9"))
+
+  expect_equal(tail(mtf_1993_parsed_sps$missing$variable),
+               c("V145", "V145", "V146",
+                 "V146", "V147", "V147"))
+  expect_equal(tail(mtf_1993_parsed_sps$missing$values),
+               c("0", "9", "0",
+                 "9", "0", "9"))
+
+  expect_equal(head(unique(mtf_1993_parsed_sps$missing$variable)),
+               c("V1", "V3", "V4",
+                 "V5", "V13", "V16"))
+  expect_equal(tail(unique(mtf_1993_parsed_sps$missing$variable)),
+               c("V142", "V143", "V144",
+                 "V145", "V146", "V147"))
+})
+
+
+test_that("Monitoring the Future 1991 has right missing values", {
+  expect_equal(head(mtf_1991_parsed_sps$missing$variable),
+               c("V1", "V3", "V4",
+                 "V4", "V5", "V5"))
+  expect_equal(head(mtf_1991_parsed_sps$missing$values),
+               c("99", "9", "99999",
+                 "99999 THRU HIGHEST", "0", "9"))
+
+  expect_equal(tail(mtf_1991_parsed_sps$missing$variable),
+               c("V145", "V145", "V146",
+                 "V146", "V147", "V147"))
+  expect_equal(tail(mtf_1991_parsed_sps$missing$values),
+               c("0", "9", "0",
+                 "9", "0", "9"))
+
+  expect_equal(head(unique(mtf_1991_parsed_sps$missing$variable)),
+               c("V1", "V3", "V4",
+                 "V5", "V13", "V16"))
+  expect_equal(tail(unique(mtf_1991_parsed_sps$missing$variable)),
+               c("V142", "V143", "V144",
+                 "V145", "V146", "V147"))
+})
+
+test_that("Monitoring the Future 1992 has right missing values", {
+  expect_equal(head(mtf_1992_parsed_sps$missing$variable),
+               c("V1", "V3", "V4",
+                 "V4", "V5", "V5"))
+  expect_equal(head(mtf_1992_parsed_sps$missing$values),
+               c("99", "9", "99999",
+                 "99999 THRU HIGHEST", "0", "9"))
+
+  expect_equal(tail(mtf_1992_parsed_sps$missing$variable),
+               c("V145", "V145", "V146",
+                 "V146", "V147", "V147"))
+  expect_equal(tail(mtf_1992_parsed_sps$missing$values),
+               c("0", "9", "0",
+                 "9", "0", "9"))
+
+  expect_equal(head(unique(mtf_1992_parsed_sps$missing$variable)),
+               c("V1", "V3", "V4",
+                 "V5", "V13", "V16"))
+  expect_equal(tail(unique(mtf_1992_parsed_sps$missing$variable)),
+               c("V142", "V143", "V144",
+                 "V145", "V146", "V147"))
+})
+
+test_that("Monitoring the Future 1979 has right missing values", {
+  expect_equal(head(mtf_1979_parsed_sps$missing$variable),
+               c("V5", "V5", "V13",
+                 "V16", "V17", "V4101"))
+  expect_equal(head(mtf_1979_parsed_sps$missing$values),
+               c("9 THRU HI", "0", "9 THRU HI",
+                 "9 THRU HI", "9 THRU HI", "9 THRU HI"))
+
+  expect_equal(tail(mtf_1979_parsed_sps$missing$variable),
+               c("V4382", "V4382", "V4383",
+                 "V4383", "V4384", "V4384"))
+  expect_equal(tail(mtf_1979_parsed_sps$missing$values),
+               c("9 THRU HI", "0", "9 THRU HI",
+                 "0", "9 THRU HI", "0"))
+
+  expect_equal(head(unique(mtf_1979_parsed_sps$missing$variable)),
+               c("V5", "V13", "V16",
+                 "V17", "V4101", "V4102"))
+  expect_equal(tail(unique(mtf_1979_parsed_sps$missing$variable)),
+               c("V4379", "V4380", "V4381",
+                 "V4382", "V4383", "V4384"))
+})
 

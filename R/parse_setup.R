@@ -109,6 +109,7 @@ parse_setup <- function(setup_file) {
   } else {
     missing <- NULL
   }
+  missing <- missing[!duplicated(missing), ]
 
   value_labels <- get_value_labels(codebook, setup, type = type)
   setup <- stats::setNames(list(setup, value_labels, missing),
@@ -165,8 +166,12 @@ parse_missing_sps <- function(codebook, setup) {
   }
 
   missing <- missing[missing$variable %in% setup$column_number, ]
+  if (nrow(missing) > 0) {
   missing <- make_thru_missing_rows(missing)
   rownames(missing) <- 1:nrow(missing)
+  } else {
+    missing <- NULL
+  }
   return(missing)
 }
 
@@ -223,8 +228,12 @@ parse_missing_sas <- function(codebook, setup) {
   missing$values <- trimws(missing$values)
 
   missing <- missing[missing$variable %in% setup$column_number, ]
+  if (nrow(missing) > 0) {
   missing <- make_thru_missing_rows(missing)
   rownames(missing) <- 1:nrow(missing)
+  } else {
+    missing <- NULL
+  }
   return(missing)
 }
 
@@ -289,7 +298,7 @@ parse_column_names <- function(codebook, type) {
     if (length(variable_label_location) == 0) {
       return(NULL)
     }
-    next_location <- grep2("^value labels$|missing values|^execute$|^.$|\\*RECODE$",
+    next_location <- grep2("^value labels$|missing values|user-defined missing values|^execute$|^.$|\\*RECODE$",
                            codebook)
     next_location <- next_location[next_location > variable_label_location]
     next_location <- next_location[1]
@@ -343,9 +352,11 @@ parse_column_names <- function(codebook, type) {
                           column_number = gsub(" .*", "",
                                                variables),
                           stringsAsFactors = FALSE)
+
   if (any(grepl("^$", variables$column_name))) {
     variables <- variables[1:(grep("^$", variables$column_name)[1]), ]
   }
   variables <- variables[!variables$column_number %in% "*", ]
+  variables <- variables[!duplicated(variables$column_number), ]
   return(variables)
 }

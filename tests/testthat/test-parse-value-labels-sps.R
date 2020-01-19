@@ -50,6 +50,532 @@ test_that("Number of value label columns are correct", {
 
    expect_true(is.null(escolar_2006_parsed_sps$value_labels))
 
+
+   expect_equal(length(mtf_1999_parsed_sps$value_labels), 101)
+   expect_equal(length(mtf_2003_parsed_sps$value_labels), 107)
+   expect_equal(length(mtf_1990_parsed_sps$value_labels), 109)
+   expect_equal(length(mtf_1989_parsed_sps$value_labels), 108)
+   expect_equal(length(mtf_2004_parsed_sps$value_labels), 106)
+   expect_equal(length(mtf_2002_parsed_sps$value_labels), 101)
+   expect_equal(length(mtf_1993_parsed_sps$value_labels), 109)
+   expect_equal(length(mtf_1991_parsed_sps$value_labels), 109)
+   expect_equal(length(mtf_1992_parsed_sps$value_labels), 109)
+  # expect_equal(length(mtf_1979_parsed_sps$value_labels), )
+
+})
+
+test_that("Monitoring the Future 1979 - parsed value labels are accurate", {
+
+  expect_equal(head(names(mtf_1979_parsed_sps$value_labels)),
+               c("V1",
+                 "V3",
+                 "V13",
+                 "V16",
+                 "V17",
+                 "V4101"))
+  expect_equal(tail(names(mtf_1979_parsed_sps$value_labels)),
+               c("V4371",
+                 "V4372",
+                 "V4373",
+                 "V4374",
+                 "V9001",
+                 "V9002"))
+
+  expect_equal(mtf_1979_parsed_sps$value_labels$V1,
+               c("1979" = "79"))
+  expect_equal(mtf_1979_parsed_sps$value_labels$V3,
+               c("FORM 4" = "4"))
+  expect_equal(mtf_1979_parsed_sps$value_labels$V4103,
+               c("NO:(1)" = "1",
+                 "YES:(2)" = "2"))
+  expect_equal(mtf_1979_parsed_sps$value_labels$V4158,
+               c("NO" = "0",
+                 "YES" = "1"))
+  expect_equal(mtf_1979_parsed_sps$value_labels$V4245,
+               c("NOT IMPORTANT" = "1",
+                 "A LITTLE IMPORTANT" = "2",
+                 "PRETTY IMPORTANT" = "3",
+                 "VERY IMPORTANT" = "4"))
+  expect_equal(mtf_1979_parsed_sps$value_labels$V4248,
+               c("LABORER (CAR WASHER, SANITARY WORKER, FARM LABORER)" = "1",
+                 "SERVICE WORKER" = "2",
+                 "OPERATIVE OR SEMI-SKILLED WORKER" = "3",
+                 "SALES CLERK IN A RETAIL STORE" = "4",
+                 "CLERICAL OR OFFICE WORKER" = "5",
+                 "PROTECTIVE SERVICE (POLICE OFFICER, FIREMAN, DETECTIVE)" = "6",
+                 "MILITARY SERVICE" = "7",
+                 "CRAFTSMAN OR SKILLED WORKER" = "8",
+                 "FARM OWNER, FARM MANAGER" = "9",
+                 "OWNER OF SMALL BUSINESS (RESTAURANT OWNER, SHOP OWNER)" = "10",
+                 "SALES REPRESENTATIVE" = "11",
+                 "MANAGER OR ADMINISTRATOR" = "12",
+                 "PROFESSIONAL WITHOUT DOCTORAL DEGREE" = "13",
+                 "PROFESSIONAL WITH DOCTORAL DEGREE OR EQUIVALENT" = "14",
+                 "FULL-TIME HOMEMAKER OR HOUSEWIFE" = "15",
+                 "DON T KNOW-GO TO Q.A13" = "16"))
+  expect_equal(mtf_1979_parsed_sps$value_labels$V9002,
+               c("PART 4: FORM 4 QUESTIONNAIRE" = "4"))
+})
+
+test_that("Monitoring the Future 1992 - parsed value labels are accurate", {
+
+  expect_equal(head(names(mtf_1992_parsed_sps$value_labels)),
+               c("V1",
+                 "V3",
+                 "V13",
+                 "V16",
+                 "V17",
+                 "V148"))
+  expect_equal(tail(names(mtf_1992_parsed_sps$value_labels)),
+               c("V145",
+                 "V146",
+                 "V147",
+                 "V208",
+                 "V209",
+                 "V210"))
+
+  expect_equal(mtf_1992_parsed_sps$value_labels$V1,
+               c("1992" = "92"))
+  expect_equal(mtf_1992_parsed_sps$value_labels$V3,
+               c("Form 1" = "1",
+                 "Form 2" = "2",
+                 "Form 3" = "3",
+                 "Form 4" = "4",
+                 "Form 5" = "5",
+                 "Form 6" = "6"))
+  expect_equal(mtf_1992_parsed_sps$value_labels$V148,
+               c("Before 71" = "1",
+                 "1971" = "2",
+                 "1972" = "3",
+                 "1973" = "4",
+                 "1974" = "5",
+                 "1975" = "6",
+                 "1976" = "7",
+                 "After 1976" = "8"))
+  expect_equal(mtf_1992_parsed_sps$value_labels$V190,
+               c("No" = "0",
+                 "Yes" = "1"))
+  expect_equal(mtf_1992_parsed_sps$value_labels$V193,
+               c("None" = "1",
+                 "$1-5" = "2",
+                 "$6-10" = "3",
+                 "$11-20" = "4",
+                 "$21-35" = "5",
+                 "$36-50" = "6",
+                 "$51-75" = "7",
+                 "$76-125" = "8",
+                 "$126+" = "9"))
+  expect_equal(mtf_1992_parsed_sps$value_labels$V209,
+               c("December 1993 release" = "1"))
+  expect_equal(mtf_1992_parsed_sps$value_labels$V210,
+               c("Part 1: Core" = "1"))
+})
+
+test_that("Monitoring the Future 1991 - parsed value labels are accurate", {
+
+  expect_equal(head(names(mtf_1991_parsed_sps$value_labels)),
+               c("V1",
+                 "V3",
+                 "V13",
+                 "V16",
+                 "V17",
+                 "V148"))
+  expect_equal(tail(names(mtf_1991_parsed_sps$value_labels)),
+               c("V145",
+                 "V146",
+                 "V147",
+                 "V208",
+                 "V209",
+                 "V210"))
+
+  expect_equal(mtf_1991_parsed_sps$value_labels$V1,
+               c("1991" = "91"))
+  expect_equal(mtf_1991_parsed_sps$value_labels$V183,
+               c("Definitely won t" = "1",
+                 "Probably won t" = "2",
+                 "Probably will" = "3",
+                 "Definitely will" = "4"))
+  expect_equal(mtf_1991_parsed_sps$value_labels$V180,
+               c("Definitely won t" = "1",
+                 "Probably won t" = "2",
+                 "Probably will" = "3",
+                 "Definitely will" = "4"))
+  expect_equal(mtf_1991_parsed_sps$value_labels$V108,
+               c("None" = "1",
+                 "Once" = "2",
+                 "Twice" = "3",
+                 "Three to five times" = "4",
+                 "Six to nine times" = "5",
+                 "Ten or more times" = "6"))
+  expect_equal(mtf_1991_parsed_sps$value_labels$V208,
+               c("ICPSR Study Number" = "9871"))
+  expect_equal(mtf_1991_parsed_sps$value_labels$V209,
+               c("February 1993 release" = "1"))
+  expect_equal(mtf_1991_parsed_sps$value_labels$V210,
+               c("Part 1: Core" = "1"))
+})
+
+test_that("Monitoring the Future 1989 - parsed value labels are accurate", {
+
+  expect_equal(head(names(mtf_1989_parsed_sps$value_labels)),
+               c("V1",
+                 "V13",
+                 "V16",
+                 "V17",
+                 "V49",
+                 "V101"))
+  expect_equal(tail(names(mtf_1989_parsed_sps$value_labels)),
+               c("V205",
+                 "V206",
+                 "V207",
+                 "V208",
+                 "V209",
+                 "V210"))
+
+  expect_equal(mtf_1989_parsed_sps$value_labels$V1,
+               c("1989" = "89"))
+  expect_equal(mtf_1989_parsed_sps$value_labels$V16,
+               c("Not self-representing" = "0",
+                 "Self-representing" = "1"))
+  expect_equal(mtf_1989_parsed_sps$value_labels$V103,
+               c("NO" = "1",
+                 "YES" = "2"))
+  expect_equal(mtf_1989_parsed_sps$value_labels$V131,
+               c("0 OCCASIONS" = "1",
+                 "1-2" = "2",
+                 "3-5" = "3",
+                 "6-9" = "4",
+                 "10-19" = "5",
+                 "20-39" = "6",
+                 "40 OR MORE" = "7"))
+  expect_equal(mtf_1989_parsed_sps$value_labels$V133,
+               c("0 OCCASIONS" = "1",
+                 "1-2" = "2",
+                 "3-5" = "3",
+                 "6-9" = "4",
+                 "10-19" = "5",
+                 "20-39" = "6",
+                 "40 OR MORE" = "7"))
+  expect_equal(mtf_1989_parsed_sps$value_labels$V209,
+               c("DECEMBER, 1992 RELEASE" = "1"))
+  expect_equal(mtf_1989_parsed_sps$value_labels$V210,
+               c("PART 1: CORE VARIABLES" = "1"))
+})
+
+
+test_that("Monitoring the Future 1990 - parsed value labels are accurate", {
+
+  expect_equal(head(names(mtf_1990_parsed_sps$value_labels)),
+               c("V1",
+                 "V3",
+                 "V13",
+                 "V16",
+                 "V17",
+                 "V148"))
+  expect_equal(tail(names(mtf_1990_parsed_sps$value_labels)),
+               c("V145",
+                 "V146",
+                 "V147",
+                 "V208",
+                 "V209",
+                 "V210"))
+
+  expect_equal(mtf_1990_parsed_sps$value_labels$V1,
+               c("1990" = "90"))
+  expect_equal(mtf_1990_parsed_sps$value_labels$V3,
+               c("Form 1" = "1",
+                 "Form 2" = "2",
+                 "Form 3" = "3",
+                 "Form 4" = "4",
+                 "Form 5" = "5",
+                 "Form 6" = "6"))
+  expect_equal(mtf_1990_parsed_sps$value_labels$V188,
+               c("No" = "0",
+                 "Yes" = "1"))
+  expect_equal(mtf_1990_parsed_sps$value_labels$V190,
+               c("No" = "0",
+                 "Yes" = "1"))
+  expect_equal(mtf_1990_parsed_sps$value_labels$V208,
+               c("ICPSR study number" = "9745"))
+  expect_equal(mtf_1990_parsed_sps$value_labels$V209,
+               c("January 1993 release" = "1"))
+  expect_equal(mtf_1990_parsed_sps$value_labels$V210,
+               c("Part 1: Core" = "1"))
+})
+
+
+test_that("Monitoring the Future 2003 - parsed value labels are accurate", {
+
+  expect_equal(head(names(mtf_2003_parsed_sps$value_labels)),
+               c("CASEID",
+                 "V13",
+                 "V16",
+                 "V17",
+                 "V1",
+                 "V3"))
+  expect_equal(tail(names(mtf_2003_parsed_sps$value_labels)),
+               c("V112",
+                 "V113",
+                 "V114",
+                 "V205",
+                 "V206",
+                 "V207"))
+
+  expect_equal(mtf_2003_parsed_sps$value_labels$CASEID,
+               c("MISSING" = "-9"))
+  expect_equal(mtf_2003_parsed_sps$value_labels$V13,
+               c("MISSING" = "-9",
+                 "NE" = "1",
+                 "NC" = "2",
+                 "S" = "3",
+                 "W" = "4"))
+  expect_equal(mtf_2003_parsed_sps$value_labels$V1,
+               c("MISSING" = "-9"))
+  expect_equal(mtf_2003_parsed_sps$value_labels$V200,
+               c("MISSING" = "-9",
+                 "None:(0)" = "0",
+                 "One:(1)" = "1",
+                 "Two:(2)" = "2",
+                 "3-4 or +:(3-4)" = "3"))
+  expect_equal(mtf_2003_parsed_sps$value_labels$V205,
+               c("MISSING" = "-9",
+                 "ARMY:(1)" = "1",
+                 "NAVY:(2)" = "2",
+                 "MARINES:(3)" = "3",
+                 "AIRFORCE:(4)" = "4",
+                 "COAST GD:(5)" = "5",
+                 "UNCERTN:(6)" = "6"))
+  expect_equal(mtf_2003_parsed_sps$value_labels$V206,
+               c("MISSING" = "-9",
+                 "NO:(1)" = "1",
+                 "UNCERTN:(2)" = "2",
+                 "YES:(3)" = "3"))
+  expect_equal(mtf_2003_parsed_sps$value_labels$V207,
+               c("MISSING" = "-9",
+                 "NO:(1)" = "1",
+                 "UNCERTN:(2)" = "2",
+                 "YES:(3)" = "3"))
+})
+
+
+test_that("Monitoring the Future 1999 - parsed value labels are accurate", {
+
+  expect_equal(head(names(mtf_1999_parsed_sps$value_labels)),
+               c("V13",
+                 "V130",
+                 "V131",
+                 "V132",
+                 "V49",
+                 "V101"))
+  expect_equal(tail(names(mtf_1999_parsed_sps$value_labels)),
+               c("V112",
+                 "V113",
+                 "V114",
+                 "V205",
+                 "V206",
+                 "V207"))
+
+  expect_equal(mtf_1999_parsed_sps$value_labels$V13,
+               c("MISSING" = "-9",
+                 "NE" = "1",
+                 "NC" = "2",
+                 "S" = "3",
+                 "W" = "4"))
+  expect_equal(mtf_1999_parsed_sps$value_labels$V130,
+               c("MISSING" = "-9",
+                 "0 OCCAS" = "1",
+                 "1-2X" = "2",
+                 "3-5X" = "3",
+                 "6-9X" = "4",
+                 "10-19X" = "5",
+                 "20-39X" = "6",
+                 "40+OCCAS" = "7"))
+  expect_equal(mtf_1999_parsed_sps$value_labels$V139,
+               c("MISSING" = "-9",
+                 "0 OCCAS" = "1",
+                 "1-2X" = "2",
+                 "3-5X" = "3",
+                 "6-9X" = "4",
+                 "10-19X" = "5",
+                 "20-39X" = "6",
+                 "40+OCCAS" = "7"))
+  expect_equal(mtf_1999_parsed_sps$value_labels$V135,
+               c("MISSING" = "-9",
+                 "0 OCCAS" = "1",
+                 "1-2X" = "2",
+                 "3-5X" = "3",
+                 "6-9X" = "4",
+                 "10-19X" = "5",
+                 "20-39X" = "6",
+                 "40+OCCAS" = "7"))
+  expect_equal(mtf_1999_parsed_sps$value_labels$V144,
+               c("MISSING" = "-9",
+                 "0 OCCAS" = "1",
+                 "1-2X" = "2",
+                 "3-5X" = "3",
+                 "6-9X" = "4",
+                 "10-19X" = "5",
+                 "20-39X" = "6",
+                 "40+OCCAS" = "7"))
+  expect_equal(mtf_1999_parsed_sps$value_labels$V206,
+               c("MISSING" = "-9",
+                 "NO" = "1",
+                 "UNCERTN" = "2",
+                 "YES" = "3"))
+  expect_equal(mtf_1999_parsed_sps$value_labels$V207,
+               c("MISSING" = "-9",
+                 "NO" = "1",
+                 "UNCERTN" = "2",
+                 "YES" = "3"))
+})
+
+
+test_that("Monitoring the Future 1993 - parsed value labels are accurate", {
+
+  expect_equal(head(names(mtf_1993_parsed_sps$value_labels)),
+               c("V1",
+                 "V3",
+                 "V13",
+                 "V16",
+                 "V17",
+                 "V148"))
+  expect_equal(tail(names(mtf_1993_parsed_sps$value_labels)),
+               c("V145",
+                 "V146",
+                 "V147",
+                 "V208",
+                 "V209",
+                 "V210"))
+
+  expect_equal(mtf_1993_parsed_sps$value_labels$V1,
+               c("1992" = "92"))
+  expect_equal(mtf_1993_parsed_sps$value_labels$V13,
+               c("NORTHEAST" = "1",
+                 "NORTH CENTRAL" = "2",
+                 "SOUTH" = "3",
+                 "WEST" = "4"))
+  expect_equal(mtf_1993_parsed_sps$value_labels$V17,
+               c("Non-SMSA" = "0",
+                 "SMSA" = "1"))
+  expect_equal(mtf_1993_parsed_sps$value_labels$V185,
+               c("No" = "0",
+                 "Yes" = "1"))
+  expect_equal(mtf_1993_parsed_sps$value_labels$V186,
+               c("No" = "0",
+                 "Yes" = "1"))
+  expect_equal(mtf_1993_parsed_sps$value_labels$V209,
+               c("December 1993 release" = "1"))
+  expect_equal(mtf_1993_parsed_sps$value_labels$V210,
+               c("Part 1: Core" = "1"))
+})
+
+
+test_that("Monitoring the Future 2004 - parsed value labels are accurate", {
+
+  expect_equal(head(names(mtf_2004_parsed_sps$value_labels)),
+               c("V1",
+                 "V13",
+                 "V16",
+                 "V17",
+                 "V101",
+                 "V102"))
+  expect_equal(tail(names(mtf_2004_parsed_sps$value_labels)),
+               c("V204",
+                 "V205",
+                 "V206",
+                 "V207",
+                 "V9001",
+                 "V9002"))
+
+  expect_equal(mtf_2004_parsed_sps$value_labels$V1,
+               c("1980" = "80"))
+  expect_equal(mtf_2004_parsed_sps$value_labels$V13,
+               c("NE" = "1",
+                 "NC" = "2",
+                 "S" = "3",
+                 "W" = "4"))
+  expect_equal(mtf_2004_parsed_sps$value_labels$V17,
+               c("NON-SMSA" = "0",
+                 "SMSA" = "1"))
+  expect_equal(mtf_2004_parsed_sps$value_labels$V130,
+               c("0 OCCASIONS" = "1",
+                 "1-2" = "2",
+                 "3-5" = "3",
+                 "6-9" = "4",
+                 "10-19" = "5",
+                 "20-39" = "6",
+                 "40 OR MORE" = "7"))
+  expect_equal(mtf_2004_parsed_sps$value_labels$V206,
+               c("NO" = "1",
+                 "UNCERTAIN" = "2",
+                 "YES" = "3"))
+  expect_equal(mtf_2004_parsed_sps$value_labels$V9001,
+               c("ICPSR STUDY NUMBER" = "7900"))
+  expect_equal(mtf_2004_parsed_sps$value_labels$V9002,
+               c("PART 6: CORE QUESTIONNAIRE" = "6"))
+})
+
+
+test_that("Monitoring the Future 2002 - parsed value labels are accurate", {
+
+  expect_equal(head(names(mtf_2002_parsed_sps$value_labels)),
+               c("V13",
+                 "V130",
+                 "V131",
+                 "V132",
+                 "V49",
+                 "V101"))
+  expect_equal(tail(names(mtf_2002_parsed_sps$value_labels)),
+               c("V112",
+                 "V113",
+                 "V114",
+                 "V205",
+                 "V206",
+                 "V207"))
+
+  expect_equal(mtf_2002_parsed_sps$value_labels$V13,
+               c("MISSING" = "-9",
+                 "NE" = "1",
+                 "NC" = "2",
+                 "S" = "3",
+                 "W" = "4"))
+  expect_equal(mtf_2002_parsed_sps$value_labels$V132,
+               c("MISSING" = "-9",
+                 "0 OCCAS (1)" = "1",
+                 "1-2X (2)" = "2",
+                 "3-5X (3)" = "3",
+                 "6-9X (4)" = "4",
+                 "10-19X (5)" = "5",
+                 "20-39X (6)" = "6",
+                 "40+OCCAS (7)" = "7"))
+  expect_equal(mtf_2002_parsed_sps$value_labels$V49,
+               c("MISSING" = "-9",
+                 "3 OR MORE" = "3"))
+  expect_equal(mtf_2002_parsed_sps$value_labels$V155,
+               c("MISSING" = "-9",
+                 "NT MARKD:(0)" = "0",
+                 "MARKED:(1)" = "1"))
+  expect_equal(mtf_2002_parsed_sps$value_labels$V179,
+               c("MISSING" = "-9",
+                 "D:(1)" = "1",
+                 "C-:(2)" = "2",
+                 "C:(3)" = "3",
+                 "C+:(4)" = "4",
+                 "B-:(5)" = "5",
+                 "B:(6)" = "6",
+                 "B+:(7)" = "7",
+                 "A-:(8)" = "8",
+                 "A:(9)" = "9"))
+  expect_equal(mtf_2002_parsed_sps$value_labels$V206,
+               c("MISSING" = "-9",
+                 "NO:(1)" = "1",
+                 "UNCERTN:(2)" = "2",
+                 "YES:(3)" = "3"))
+  expect_equal(mtf_2002_parsed_sps$value_labels$V207,
+               c("MISSING" = "-9",
+                 "NO:(1)" = "1",
+                 "UNCERTN:(2)" = "2",
+                 "YES:(3)" = "3"))
 })
 
 
