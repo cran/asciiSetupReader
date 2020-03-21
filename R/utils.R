@@ -8,18 +8,18 @@ get_column_spaces <- function(setup, variables, codebook) {
   setup <- gsub("\t", " ", setup)
   setup <- gsub("([0-9]) - ([0-9])", "\\1-\\2", setup)
   setup <- gsub("([0-9]+-[0-9]+) ([[:alpha:]]+)", "\\1   \\2",
-                        setup)
+                setup)
   setup <- gsub("([[:alpha:]]+[0-9]* [0-9]+) ([[:alpha:]]+[0-9]*)", "\\1   \\2",
-                        setup)
+                setup)
   setup <- gsub("\\s{2,}\\$ ([0-9]+)", " \\1",
-                        setup)
+                setup)
   setup <- unlist(strsplit(setup, "\\s{2,}"))
   setup <- gsub("\\$|\\;|\\(.*|\\.[0-9]+", "", setup)
   setup <- gsub("\\.$", "", setup)
   setup <- stringr::str_trim(setup)
   setup <- setup[grep("[0-9]$", setup)]
   setup <- data.frame(column_number = setup,
-                              stringsAsFactors = FALSE)
+                      stringsAsFactors = FALSE)
   setup$column_number <- gsub("^\\/", "", setup$column_number)
 
   setup$begin <- gsub(".* ", "", setup$column_number)
@@ -30,7 +30,7 @@ get_column_spaces <- function(setup, variables, codebook) {
   setup$column_number <- gsub(" .*", "", setup$column_number)
   if (!is.null(variables)) {
     setup <- setup[tolower(setup$column_number) %in%
-                                     tolower(variables$column_number), ]
+                     tolower(variables$column_number), ]
 
     # In the CDC SADC data set, the column number changes from lowercase
     # to uppercase depending on section of setup file.
@@ -42,7 +42,7 @@ get_column_spaces <- function(setup, variables, codebook) {
       }
     }
     setup <- merge(setup, variables,
-                           by = "column_number", all.x = TRUE)
+                   by = "column_number", all.x = TRUE)
   } else {
     setup$column_name <- setup$column_number
   }
@@ -50,6 +50,14 @@ get_column_spaces <- function(setup, variables, codebook) {
 
   setup$begin <- as.numeric(setup$begin)
   setup$end   <- as.numeric(setup$end)
+
+  # Checks if any begin values are > than end values
+  if (any(setup$begin > setup$end)) {
+
+    stop(paste0("The following columns have a start number greater than the end number. Please check your setup file and fix this issue before rerunning this code.",
+                paste("\nColumns with issue: ",
+                      setup$column_number[setup$begin > setup$end])))
+  }
 
 
   format_section <- grep2("^FORMAT$|SAS FORMAT STATEMENT|\\/\\* format$", codebook)
@@ -64,7 +72,7 @@ get_column_spaces <- function(setup, variables, codebook) {
     format <- data.frame(column_name = gsub(" .*", "", format),
                          f_name      = gsub(".* ", "", format))
     setup <- merge(setup, format, by.x = "column_number",
-                           by.y = "column_name", all.x = TRUE)
+                   by.y = "column_name", all.x = TRUE)
   }
 
   setup <- setup[order(setup$begin), ]
@@ -104,6 +112,18 @@ fix_missing <- function(data, missing) {
     missing_values <- missing$values[missing$variable == column]
     missing_values <- as.character(trimws(missing_values))
     missing_values <- gsub("\\'", "", missing_values)
+
+    if (any(grepl("thru hi", missing, ignore.case = TRUE))) {
+      thru_higher <- missing_values[grep("thru hi", missing_values, ignore.case = TRUE)]
+      thru_higher <- gsub(" thru hi.*", "", thru_higher, ignore.case = TRUE)
+      thru_higher <- as.numeric(thru_higher)
+      unique_values_numeric <- suppressWarnings(as.numeric(unique(data[[column]])))
+      unique_values_numeric <- unique_values_numeric[!is.na(unique_values_numeric)]
+      missing_values <- c(missing_values,
+                          unique_values_numeric[unique_values_numeric > thru_higher])
+      missing_values <- gsub(" thru hi.*", "", missing_values, ignore.case = TRUE)
+
+    }
     names(missing_values) <- NA
 
     # Sets character to column type in case it isn't already.
@@ -114,7 +134,7 @@ fix_missing <- function(data, missing) {
     data.table::set(data, j = column,
                     value = haven::as_factor(haven::labelled(data[[column]],
                                                              missing_values)))
-    # Resaves as character type instead of factor type
+    # Re-saves as character type instead of factor type
     data.table::set(data, j = column, value = as.character(data[[column]]))
 
   }
@@ -126,13 +146,25 @@ read_data <- function(data, setup) {
   positions <- vroom::fwf_positions(setup$setup$begin,
                                     setup$setup$end,
                                     setup$setup$column_number)
-  data <- suppressMessages(vroom::vroom_fwf(data,
-                                           col_positions = positions,
-                                           col_types = vroom::cols(.default =
-                                                                     vroom::col_character())))
-  data <- data.table::as.data.table(data)
 
-  return(data)
+  out <- tryCatch(
+    {
+      temp <- suppressMessages(vroom::vroom_fwf(data,
+                                                col_positions = positions,
+                                                col_types = vroom::cols(.default =
+                                                                          vroom::col_character())))
+      temp <- data.table::as.data.table(temp)
+    },
+    error=function(cond) {
+      temp <- suppressMessages(readr::read_fwf(data,
+                                               col_positions = positions,
+                                               col_types = vroom::cols(.default =
+                                                                         vroom::col_character())))
+      temp <- data.table::as.data.table(temp)
+    }
+  )
+
+  return(out)
 }
 
 
@@ -149,7 +181,7 @@ fix_names_missing_numeric <- function(data,
   if (real_names) {
     # Fixes column names to real names
     variables <- setup$setup[setup$setup$column_number
-                                      %in% names(data), ]
+                             %in% names(data), ]
     data.table::setnames(data, old = variables$column_number,
                          new = variables$column_name)
   }
