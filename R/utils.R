@@ -121,8 +121,20 @@ fix_missing <- function(data, missing) {
       unique_values_numeric <- suppressWarnings(as.numeric(unique(data[[column]])))
       unique_values_numeric <- unique_values_numeric[!is.na(unique_values_numeric)]
       missing_values <- c(missing_values,
-                          unique_values_numeric[unique_values_numeric > thru_higher])
+                          unique_values_numeric[unique_values_numeric >= thru_higher])
       missing_values <- gsub(" thru hi.*", "", missing_values, ignore.case = TRUE)
+
+    }
+
+    if (any(grepl("low thru", missing, ignore.case = TRUE))) {
+      low_thru <- missing_values[grep("low thru", missing_values, ignore.case = TRUE)]
+      low_thru <- gsub(".*low thru ", "", low_thru, ignore.case = TRUE)
+      low_thru <- as.numeric(low_thru)
+      unique_values_numeric <- suppressWarnings(as.numeric(unique(data[[column]])))
+      unique_values_numeric <- unique_values_numeric[!is.na(unique_values_numeric)]
+      missing_values <- c(missing_values,
+                          unique_values_numeric[unique_values_numeric <= low_thru])
+      missing_values <- gsub(".*low thru ", "", missing_values, ignore.case = TRUE)
 
     }
     names(missing_values) <- NA

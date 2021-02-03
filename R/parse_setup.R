@@ -183,8 +183,8 @@ parse_missing_sps <- function(codebook, setup) {
 
   missing <- missing[missing$variable %in% c(setup$column_number), ]
   if (nrow(missing) > 0) {
-  missing <- make_thru_missing_rows(missing)
-  rownames(missing) <- 1:nrow(missing)
+    missing <- make_thru_missing_rows(missing)
+    rownames(missing) <- 1:nrow(missing)
   } else {
     missing <- NULL
   }
@@ -245,8 +245,8 @@ parse_missing_sas <- function(codebook, setup) {
 
   missing <- missing[missing$variable %in% setup$column_number, ]
   if (nrow(missing) > 0) {
-  missing <- make_thru_missing_rows(missing)
-  rownames(missing) <- 1:nrow(missing)
+    missing <- make_thru_missing_rows(missing)
+    rownames(missing) <- 1:nrow(missing)
   } else {
     missing <- NULL
   }
@@ -255,10 +255,12 @@ parse_missing_sas <- function(codebook, setup) {
 
 
 make_thru_missing_rows <- function(missing) {
-  thru_rows <- missing[grep("thru -?[0-9]", missing$values, ignore.case = TRUE), ]
+  thru_rows <- missing[grep("[0-9] thru -?[0-9]", missing$values, ignore.case = TRUE), ]
   # thru_highest_rows <- missing[grep("thru hi", missing$values, ignore.case = TRUE), ]
 
-  if (nrow(thru_rows) < 1) return(missing)
+  if (nrow(thru_rows) < 1) {
+    return(missing)
+  }
 
   for (i in 1:nrow(thru_rows)) {
     temp <- thru_rows$values[i]
@@ -271,7 +273,7 @@ make_thru_missing_rows <- function(missing) {
   }
 
   # Removes all rows with "thru"
-  missing <- missing[-grep("thru -?[0-9]", missing$values, ignore.case = TRUE), ]
+  missing <- missing[-grep("[0-9] thru -?[0-9]", missing$values, ignore.case = TRUE), ]
   return(missing)
 }
 
@@ -290,21 +292,21 @@ parse_codebook <- function(setup_file, type) {
 
 parse_value_labels <- function(setup, type) {
 
-    value_labels <- setup$value_labels
-    value_labels <- value_labels[value_labels$column %in% setup$setup$column_number, ]
+  value_labels <- setup$value_labels
+  value_labels <- value_labels[value_labels$column %in% setup$setup$column_number, ]
 
-    value_label_order <- unique(value_labels$column)
-    value_labels <- split.data.frame(value_labels, value_labels$column)
-    value_label_cols <- c()
-    for (i in seq_along(value_labels)) {
-      column <- unique(value_labels[[i]]$column)
-      value_labels[[i]] <- value_label_matrixer(value_labels[[i]][[1]], type)
-      value_label_cols <- c(value_label_cols, column)
-    }
+  value_label_order <- unique(value_labels$column)
+  value_labels <- split.data.frame(value_labels, value_labels$column)
+  value_label_cols <- c()
+  for (i in seq_along(value_labels)) {
+    column <- unique(value_labels[[i]]$column)
+    value_labels[[i]] <- value_label_matrixer(value_labels[[i]][[1]], type)
+    value_label_cols <- c(value_label_cols, column)
+  }
 
-    names(value_labels) <- value_label_cols
-    value_labels <- value_labels[value_label_order]
-    return(value_labels)
+  names(value_labels) <- value_label_cols
+  value_labels <- value_labels[value_label_order]
+  return(value_labels)
 }
 
 parse_column_names <- function(codebook, type) {

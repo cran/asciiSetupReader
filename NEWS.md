@@ -1,3 +1,9 @@
+# asciiSetupReader 2.4.0
+
+* Adds functionality to handle "low thru" missing values.
+* "low thru" and "thru high" missing values are now less (more) than and equal
+  to rather than just less (more) than the value.
+
 # asciiSetupReader 2.3.2
 
 * Fix bug on reading an atypical .sps file.

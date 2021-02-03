@@ -2,7 +2,7 @@ Type: Package
 Package: asciiSetupReader
 Title: Reads Fixed-Width ASCII Data Files (.txt or .dat) that Have
         Accompanying Setup Files (.sps or .sas)
-Version: 2.3.2
+Version: 2.4.0
 Authors@R: 
     person(given = "Jacob",
            family = "Kaplan",
@@ -30,8 +30,8 @@ Language: en-US
 LazyData: true
 RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2020-11-28 16:01:25 UTC; user
+Packaged: 2021-02-03 16:13:04 UTC; jkkap
 Author: Jacob Kaplan [aut, cre] (<https://orcid.org/0000-0002-0601-0387>)
 Maintainer: Jacob Kaplan <jkkaplan6@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-11-28 17:50:05 UTC
+Date/Publication: 2021-02-03 16:40:11 UTC
