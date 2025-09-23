@@ -27,10 +27,10 @@ missing_values <- c("victim_sex",
                     "-8")
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  asciiSetupReader::make_sps_setup(file_name = "setup_file_example",
-#                                   col_positions  = col_positions,
-#                                   col_names      = col_names,
-#                                   col_labels     = col_labels,
-#                                   value_labels   = value_labels,
-#                                   missing_values = missing_values)
+# asciiSetupReader::make_sps_setup(file_name = "setup_file_example",
+#                                  col_positions  = col_positions,
+#                                  col_names      = col_names,
+#                                  col_labels     = col_labels,
+#                                  value_labels   = value_labels,
+#                                  missing_values = missing_values)
 
